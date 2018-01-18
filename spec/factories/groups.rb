@@ -1,5 +1,6 @@
-FactoryBot.define do
-  factory :group do
-    name { Faker::Lorem.word }
-  end
-end
+# FactoryBot.define do
+#
+#   factory :group do
+#     name { get_group }
+#   end
+# end
