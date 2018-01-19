@@ -65,9 +65,9 @@ ActiveRecord::Schema.define(version: 20180118180102) do
     t.string "last_name"
     t.string "login_location"
     t.string "email"
-    t.integer "mobile_phone"
-    t.integer "home_phone"
-    t.integer "work_phone"
+    t.string "mobile_phone"
+    t.string "home_phone"
+    t.string "work_phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

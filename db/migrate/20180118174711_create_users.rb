@@ -6,9 +6,9 @@ class CreateUsers < ActiveRecord::Migration[5.1]
       t.string :last_name
       t.string :login_location
       t.string :email
-      t.integer :mobile_phone
-      t.integer :home_phone
-      t.integer :work_phone
+      t.string :mobile_phone
+      t.string :home_phone
+      t.string :work_phone
 
       t.timestamps
     end

@@ -1,6 +1,6 @@
 class MindBodyAPI
 
-   def get_all_staff(source_key = '_Blocstudent', password = 'gS2EOansqkwV/jHxPbBtCuf0iH0=', siteids = {'ids' => [-99]})
+   def get_all_staff(source_key = MINDBODY_SOURCE_NAME, password = 'gS2EOansqkwV/jHxPbBtCuf0iH0=', siteids = {'ids' => [-99]})
       # Returns a Hash of MindBody::Models::Staff.
       response = MindBody::Services::StaffService.get_staff('Username' => source_key, 'Password' => password, 'SiteIDs' => {'ids' => [siteids]})
       # Isolate the array containing each staff member's data.
@@ -15,11 +15,14 @@ class MindBodyAPI
             single_staff['id'] = staff['id']
             single_staff['first_name'] = staff['first_name']
             single_staff['last_name'] = staff['last_name']
-            single_staff['email'] = staff['email']
-            single_staff['mobile_phone'] = staff['mobile_phone']
-            single_staff['home_phone'] = staff['home_phone']
-            single_staff['work_phone'] = staff['work_phone']
-            single_staff['login_locations'] = staff['login_locations']
+
+            # Returning nil from test data. Awaiting reply from MINDBODY API team to see if this is returned in actual data.
+
+            # single_staff['email'] = staff['email']
+            # single_staff['mobile_phone'] = staff['mobile_phone']
+            # single_staff['home_phone'] = staff['home_phone']
+            # single_staff['work_phone'] = staff['work_phone']
+            # single_staff['login_locations'] = staff['login_locations']
          end
       end
       single_staff
