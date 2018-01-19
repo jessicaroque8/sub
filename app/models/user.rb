@@ -3,4 +3,6 @@ class User < ApplicationRecord
   has_many :sendees
   has_many :sub_requests, through: :sendees
   has_many :responses, through: :sendees
+
+  validates :staff_id_mb, presence: true
 end

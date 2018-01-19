@@ -31,7 +31,6 @@ class GroupsController < ApplicationController
    private
 
    def group_params
-      #whitelist params
       params.permit(:name)
    end
 
