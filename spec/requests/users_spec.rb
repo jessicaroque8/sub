@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
    let!(:my_user) { User.create(staff_id_mb: 100000333, first_name: 'Kali', last_name: 'Shakti',
-                                email: 'kali@email.com', login_location: 'Clubville', mobile_phone: '3333333333',
-                                work_phone: '8888888888', home_phone: '4444444444') }
+                                # email: 'kali@email.com', login_location: 'Clubville', mobile_phone: '3333333333',
+                                # work_phone: '8888888888', home_phone: '4444444444') }
    let(:my_user_id) { my_user.id }
    let(:url) { '/users/' + my_user_id.to_s }
 
@@ -48,7 +48,7 @@ RSpec.describe 'Users API', type: :request do
       end
    end
 
-   describe 'POST /groups' do
+   describe 'POST /users' do
       valid_attributes = { staff_id_mb: 100000888, first_name: 'Hera', last_name: 'Rain' }
                            # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
                            # work_phone: '2222222222', home_phone: '6666666666' }
@@ -89,8 +89,8 @@ RSpec.describe 'Users API', type: :request do
 
    describe 'PUT /users/:id' do
       valid_attributes = { staff_id_mb: 100000888, first_name: 'Hera', last_name: 'Rain',
-                                 email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
-                                 work_phone: '2222222222', home_phone: '6666666666' }
+                                 # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
+                                 # work_phone: '2222222222', home_phone: '6666666666' }
 
       context 'when the record exists' do
          before { put url, params: valid_attributes }
@@ -107,8 +107,8 @@ RSpec.describe 'Users API', type: :request do
 
    describe 'DELETE /users/:id' do
       valid_attributes = { staff_id_mb: 100000888, first_name: 'Hera', last_name: 'Rain',
-                                 email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
-                                 work_phone: '2222222222', home_phone: '6666666666' }
+                                 # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
+                                 # work_phone: '2222222222', home_phone: '6666666666' }
 
       context 'when the record exists' do
          before { delete url }
