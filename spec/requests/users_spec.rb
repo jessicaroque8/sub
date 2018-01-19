@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
-   let!(:my_user) { User.create(staff_id_mb: 100000333, first_name: 'Kali', last_name: 'Shakti',
+   let!(:my_user) { User.create(staff_id_mb: 100000333, first_name: 'Kali', last_name: 'Shakti') }
                                 # email: 'kali@email.com', login_location: 'Clubville', mobile_phone: '3333333333',
-                                # work_phone: '8888888888', home_phone: '4444444444') }
+                                # work_phone: '8888888888', home_phone: '4444444444'
    let(:my_user_id) { my_user.id }
    let(:url) { '/users/' + my_user_id.to_s }
 
@@ -49,19 +49,24 @@ RSpec.describe 'Users API', type: :request do
    end
 
    describe 'POST /users' do
-      valid_attributes = { staff_id_mb: 100000888, first_name: 'Hera', last_name: 'Rain' }
+      valid_attributes = { username: 'erincoffey', password: 'abc123', siteids: '-99', first_name: 'Erin', last_name: 'Coffey' }
                            # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
                            # work_phone: '2222222222', home_phone: '6666666666' }
 
-      invalid_attributes = { staff_id_mb: nil }
+      invalid_attributes = { username: 'yogi1', password: 'abc1234', siteids: '-99', first_name: 'Someone', last_name: 'NoExist' }
 
       context 'when the request is valid' do
          before { post '/users', params: valid_attributes }
 
-         it 'creates a user' do
-            expect(json['staff_id_mb']).to eq(100000888)
-            expect(json['first_name']).to eq('Hera')
-            expect(json['last_name']).to eq('Rain')
+         it 'retrieves from the MINDBODY API the user data' do
+            expect(assigns(:mb_data)).not_to be_nil
+            expect(assigns(:mb_data)).to be_an_instance_of(Hash)
+         end
+
+         it 'creates a user using the data from MINDBODY' do
+            expect(json['staff_id_mb']).to eq(100000315)
+            expect(json['first_name']).to eq('Erin')
+            expect(json['last_name']).to eq('Coffey')
             # expect(json['email']).to eq('hera@email.com')
             # expect(json['login_location']).to eq('Clubville')
             # expect(json['mobile_phone']).to eq('1111111111')
@@ -88,7 +93,7 @@ RSpec.describe 'Users API', type: :request do
    end
 
    describe 'PUT /users/:id' do
-      valid_attributes = { staff_id_mb: 100000888, first_name: 'Hera', last_name: 'Rain',
+      valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey-Bean' }
                                  # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
                                  # work_phone: '2222222222', home_phone: '6666666666' }
 
@@ -106,7 +111,7 @@ RSpec.describe 'Users API', type: :request do
    end
 
    describe 'DELETE /users/:id' do
-      valid_attributes = { staff_id_mb: 100000888, first_name: 'Hera', last_name: 'Rain',
+      valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey' }
                                  # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
                                  # work_phone: '2222222222', home_phone: '6666666666' }
 

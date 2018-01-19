@@ -1,6 +1,6 @@
 class MindBodyAPI
 
-   def get_all_staff(source_key = MINDBODY_SOURCE_NAME, password = 'gS2EOansqkwV/jHxPbBtCuf0iH0=', siteids = {'ids' => [-99]})
+   def get_all_staff(source_key, password, siteids)
       # Returns a Hash of MindBody::Models::Staff.
       response = MindBody::Services::StaffService.get_staff('Username' => source_key, 'Password' => password, 'SiteIDs' => {'ids' => [siteids]})
       # Isolate the array containing each staff member's data.

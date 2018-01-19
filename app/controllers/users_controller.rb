@@ -1,3 +1,5 @@
+require 'MindBodyAPI'
+
 class UsersController < ApplicationController
 
    include Response
@@ -11,7 +13,12 @@ class UsersController < ApplicationController
    end
 
    def create
-      @user = User.create!(user_params)
+      # Instantiate the MindBodyAPI service
+      mb = MindBodyAPI.new
+      # Return a hash of MINDBODY's data for the user
+      @mb_data = mb.get_single_staff(params[:username], params[:password], params[:siteids], params[:first_name], params[:last_name])
+
+      @user = User.create!(staff_id_mb: @mb_data['id'], first_name: @mb_data['first_name'], last_name: @mb_data['last_name'])
       json_response(@user, :created)
    end
 
@@ -34,6 +41,10 @@ class UsersController < ApplicationController
    def user_params
       params.permit(:staff_id_mb, :first_name, :last_name)
    end
+
+   # def mb_params
+   #    params.permit(:username, :password, :siteids, :first_name, :last_name)
+   # end
 
    def set_user
       @user = User.find(params[:id])

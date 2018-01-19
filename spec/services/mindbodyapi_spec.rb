@@ -3,8 +3,8 @@ require 'MindBodyAPI'
 
 RSpec.describe MindBodyAPI do
 
-   my_sourcekey = '_Blocstudent'
-   my_password = 'gS2EOansqkwV/jHxPbBtCuf0iH0='
+   my_sourcekey = 'erincoffey'
+   my_password = 'abc123'
    my_siteids = -99
    my_first_name = 'Erin'
    my_last_name = 'Coffey'
