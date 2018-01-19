@@ -12,6 +12,7 @@ class MindBodyAPI
       single_staff = {}
       all_staff.each do |staff|
          if staff['first_name'] == first_name && staff['last_name'] == last_name
+            single_staff['id'] = staff['id']
             single_staff['first_name'] = staff['first_name']
             single_staff['last_name'] = staff['last_name']
             single_staff['email'] = staff['email']

@@ -61,6 +61,13 @@ ActiveRecord::Schema.define(version: 20180118180102) do
 
   create_table "users", force: :cascade do |t|
     t.integer "staff_id_mb"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "login_location"
+    t.string "email"
+    t.integer "mobile_phone"
+    t.integer "home_phone"
+    t.integer "work_phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
