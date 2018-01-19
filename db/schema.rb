@@ -28,12 +28,22 @@ ActiveRecord::Schema.define(version: 20180118180102) do
   create_table "responses", force: :cascade do |t|
     t.integer "value"
     t.text "note"
-    t.integer "subscriber_id"
+    t.integer "sendee_id"
     t.integer "sub_request_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["sendee_id"], name: "index_responses_on_sendee_id"
     t.index ["sub_request_id"], name: "index_responses_on_sub_request_id"
-    t.index ["subscriber_id"], name: "index_responses_on_subscriber_id"
+  end
+
+  create_table "sendees", force: :cascade do |t|
+    t.boolean "sub"
+    t.integer "sub_request_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sub_request_id"], name: "index_sendees_on_sub_request_id"
+    t.index ["user_id"], name: "index_sendees_on_user_id"
   end
 
   create_table "sub_requests", force: :cascade do |t|
@@ -49,23 +59,10 @@ ActiveRecord::Schema.define(version: 20180118180102) do
     t.index ["user_id"], name: "index_sub_requests_on_user_id"
   end
 
-  create_table "subscribers", force: :cascade do |t|
-    t.boolean "initiator"
-    t.boolean "sub"
-    t.integer "sub_request_id"
-    t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["sub_request_id"], name: "index_subscribers_on_sub_request_id"
-    t.index ["user_id"], name: "index_subscribers_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.integer "staff_id_mb"
-    t.integer "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["group_id"], name: "index_users_on_group_id"
   end
 
 end
