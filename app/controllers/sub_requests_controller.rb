@@ -35,7 +35,7 @@ class SubRequestsController < ApplicationController
    # User should select the correct class if there are multiple array items.
    def search_classes
       mb = MindBodyAPI.new
-      classes = mb.get_staff_classes(params[:staff_id_mb], params[:start_date_time], params[:end_date_time])
+      @classes = mb.get_staff_classes(params[:staff_id_mb], params[:start_date_time], params[:end_date_time])
    end
 
    private
