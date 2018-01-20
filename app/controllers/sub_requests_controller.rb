@@ -13,12 +13,7 @@ class SubRequestsController < ApplicationController
    end
 
    def create
-      # Instantiate the MindBodyAPI service
-      mb = MindBodyAPI.new
-      # Return a hash of MINDBODY's data for the sub_request
-      @mb_data = mb.get_single_staff(params[:sub_requestname], params[:password], params[:siteids], params[:first_name], params[:last_name])
-
-      @sub_request = SubRequest.create!(staff_id_mb: @mb_data['id'], first_name: @mb_data['first_name'], last_name: @mb_data['last_name'])
+      @sub_request = SubRequest.create!(sub_request_params)
       json_response(@sub_request, :created)
    end
 
@@ -36,10 +31,17 @@ class SubRequestsController < ApplicationController
       head :no_content
    end
 
+   # Call this method before creating a new Sub Request.
+   # User should select the correct class if there are multiple array items.
+   def search_classes
+      mb = MindBodyAPI.new
+      classes = mb.get_staff_classes(params[:staff_id_mb], params[:start_date_time], params[:end_date_time])
+   end
+
    private
 
    def sub_request_params
-      params.permit(:staff_id_mb, :first_name, :last_name)
+      params.permit(:user_id, :group_id, :class_id_mb, :start_date_time, :end_date_time, :class_name, :note)
    end
 
    def set_sub_request

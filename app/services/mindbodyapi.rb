@@ -36,10 +36,8 @@ class MindBodyAPI
       classes.each_with_index do |c, i|
          if c['staff']['id'] == staff_id_mb
             class_data = {}
-            class_data['class_id'] = c['class_schedule_id']
-            class_data['class_id'] = c['class_schedule_id']
+            class_data['class_id_mb'] = c['class_schedule_id']
             class_data['staff_name'] = c['staff']['name']
-            class_data['staff_id'] = c['staff']['id']
             class_data['class_name'] = c['class_description']['name']
             class_data['start_date_time'] = c['start_date_time']
             class_data['end_date_time'] = c['end_date_time']

@@ -2,8 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
    let!(:my_user) { User.create(staff_id_mb: 100000333, first_name: 'Kali', last_name: 'Shakti') }
-                                # email: 'kali@email.com', login_location: 'Clubville', mobile_phone: '3333333333',
-                                # work_phone: '8888888888', home_phone: '4444444444'
    let(:my_user_id) { my_user.id }
    let(:url) { '/users/' + my_user_id.to_s }
 
@@ -50,8 +48,6 @@ RSpec.describe 'Users API', type: :request do
 
    describe 'POST /users' do
       valid_attributes = { username: 'erincoffey', password: 'abc123', siteids: '-99', first_name: 'Erin', last_name: 'Coffey' }
-                           # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
-                           # work_phone: '2222222222', home_phone: '6666666666' }
 
       invalid_attributes = { username: 'yogi1', password: 'abc1234', siteids: '-99', first_name: 'Someone', last_name: 'NoExist' }
 
@@ -67,11 +63,6 @@ RSpec.describe 'Users API', type: :request do
             expect(json['staff_id_mb']).to eq(100000315)
             expect(json['first_name']).to eq('Erin')
             expect(json['last_name']).to eq('Coffey')
-            # expect(json['email']).to eq('hera@email.com')
-            # expect(json['login_location']).to eq('Clubville')
-            # expect(json['mobile_phone']).to eq('1111111111')
-            # expect(json['work_phone']).to eq('2222222222')
-            # expect(json['home_phone']).to eq('6666666666')
          end
 
          it 'returns status code 201' do
@@ -94,8 +85,6 @@ RSpec.describe 'Users API', type: :request do
 
    describe 'PUT /users/:id' do
       valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey-Bean' }
-                                 # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
-                                 # work_phone: '2222222222', home_phone: '6666666666' }
 
       context 'when the record exists' do
          before { put url, params: valid_attributes }
@@ -112,8 +101,6 @@ RSpec.describe 'Users API', type: :request do
 
    describe 'DELETE /users/:id' do
       valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey' }
-                                 # email: 'hera@email.com', login_location: 'Clubville', mobile_phone: '1111111111',
-                                 # work_phone: '2222222222', home_phone: '6666666666' }
 
       context 'when the record exists' do
          before { delete url }

@@ -4,8 +4,9 @@ RSpec.describe 'SubRequests API', type: :request do
    let(:my_user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey')}
    let(:my_group) { Group.create(name: 'Yoga') }
 
-   datetime = Faker::Time.forward(23, :morning)
-   let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, datetime: datetime, class_name: 'Vinyasa Yoga', class_id_mb: 1000, note: 'Please cover me')}
+   startdatetime = Faker::Time.forward(23, :morning)
+   enddatetime = Faker::Time.forward(23, :morning)
+   let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
    let(:url) { '/sub_requests/' + my_sub_request.id.to_s }
 
    describe "GET /sub_requests" do
@@ -50,28 +51,25 @@ RSpec.describe 'SubRequests API', type: :request do
    end
 
    describe 'POST /sub_requests' do
-      my_datetime = Faker::Time.forward(24, :morning)
+      otherstartdatetime = Faker::Time.forward(24, :morning)
+      otherenddatetime = Faker::Time.forward(24, :morning)
       another_user = User.create(staff_id_mb: 100000316, first_name: 'Sasha', last_name: 'Fierce')
       another_group = Group.create(name: 'Fitness')
-      valid_attributes = { user_id: another_user.id, group_id: another_group.id, datetime: my_datetime, class_name: 'Zumba', class_id_mb: 1001, note: 'Please cover me' }
+      valid_attributes = { user_id: another_user.id, group_id: another_group.id, class_id_mb: 2342, start_date_time: otherstartdatetime, end_date_time: otherenddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
 
-      invalid_attributes = { user_id: another_user.id, group_id: another_group.id, datetime: my_datetime, class_name: 'Zumba', class_id_mb: nil, note: 'Please cover me' }
+      invalid_attributes = { user_id: another_user.id, group_id: another_group.id, start_date_time: otherstartdatetime, end_date_time: otherenddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
 
       context 'when the request is valid' do
          before { post '/sub_requests', params: valid_attributes }
 
-         it 'retrieves from the MINDBODY API the class data' do
-            expect(assigns(:mb_class_data)).not_to be_nil
-            expect(assigns(:mb_class_data)).to be_an_instance_of(Hash)
-         end
-
-         it 'creates a SubRequest using the data from MINDBODY' do
-            expect(json['user_id']).to eq(my_user.id)
-            expect(json['group_id']).to eq(my_group.id)
-            expect(json['datetime']).to eq(my_datetime)
-            expect(json['class_name']).to eq('Vinyasa Yoga')
-            expect(json['class_id_mb']).to eq(1001)
-            expect(json['note']).to eq('Please cover me')
+         it 'creates a SubRequest' do
+            expect(json['user_id']).to eq(another_user.id)
+            expect(json['group_id']).to eq(another_group.id)
+            expect(json['start_date_time']).to eq(otherstartdatetime)
+            expect(json['end_date_time']).to eq(otherenddatetime)
+            expect(json['class_name']).to eq('Heated Yoga')
+            expect(json['class_id_mb']).to eq(2342)
+            expect(json['note']).to eq('Please sub me!')
          end
 
          it 'returns status code 201' do
@@ -93,12 +91,13 @@ RSpec.describe 'SubRequests API', type: :request do
    end
 
    describe 'PUT /sub_requests/:id' do
-      my_datetime = Faker::Time.forward(24, :morning)
+      otherstartdatetime = Faker::Time.forward(24, :morning)
+      otherenddatetime = Faker::Time.forward(24, :morning)
       another_user = User.create(staff_id_mb: 100000316, first_name: 'Sasha', last_name: 'Fierce')
       another_group = Group.create(name: 'Fitness')
-      valid_attributes = { user_id: another_user.id, group_id: another_group.id, datetime: my_datetime, class_name: 'Zumba', class_id_mb: 1001, note: 'Please cover me' }
+      valid_attributes = { user_id: another_user.id, group_id: another_group.id, class_id_mb: 2342, start_date_time: otherstartdatetime, end_date_time: otherenddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
 
-      invalid_attributes = { user_id: another_user.id, group_id: another_group.id, datetime: my_datetime, class_name: 'Zumba', class_id_mb: nil, note: 'Please cover me' }
+      invalid_attributes = { user_id: another_user.id, group_id: another_group.id, start_date_time: otherstartdatetime, end_date_time: otherenddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
 
       context 'when the record exists' do
          before { put url, params: valid_attributes }
@@ -121,6 +120,15 @@ RSpec.describe 'SubRequests API', type: :request do
          it 'returns status code 204' do
             expect(response).to have_http_status(204)
          end
+      end
+   end
+
+   describe "POST /search_classes" do
+      startdatetime = DateTime.new(2018, 02, 10, 00, 00, 00, 0)
+      enddatetime = DateTime.new(2018, 02, 10, 00, 00, 00, 0)
+      it "returns an array" do
+         post '/sub_requests/search_classes', params: {staff_id_mb: 100000256, start_date_time: startdatetime, end_date_time: enddatetime}
+         expect(response).to have_http_status(:success)
       end
    end
 

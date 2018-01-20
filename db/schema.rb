@@ -47,7 +47,8 @@ ActiveRecord::Schema.define(version: 20180118180102) do
   end
 
   create_table "sub_requests", force: :cascade do |t|
-    t.datetime "datetime"
+    t.datetime "start_date_time"
+    t.datetime "end_date_time"
     t.string "class_name"
     t.integer "class_id_mb"
     t.text "note"
