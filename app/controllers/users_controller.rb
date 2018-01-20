@@ -42,10 +42,6 @@ class UsersController < ApplicationController
       params.permit(:staff_id_mb, :first_name, :last_name)
    end
 
-   # def mb_params
-   #    params.permit(:username, :password, :siteids, :first_name, :last_name)
-   # end
-
    def set_user
       @user = User.find(params[:id])
    end

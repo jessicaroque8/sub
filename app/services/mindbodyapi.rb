@@ -15,17 +15,39 @@ class MindBodyAPI
             single_staff['id'] = staff['id']
             single_staff['first_name'] = staff['first_name']
             single_staff['last_name'] = staff['last_name']
-
-            # Returning nil from test data. Awaiting reply from MINDBODY API team to see if this is returned in actual data.
-
-            # single_staff['email'] = staff['email']
-            # single_staff['mobile_phone'] = staff['mobile_phone']
-            # single_staff['home_phone'] = staff['home_phone']
-            # single_staff['work_phone'] = staff['work_phone']
-            # single_staff['login_locations'] = staff['login_locations']
          end
       end
       single_staff
+   end
+
+   # Gets a staff member's classes based on the specified parameters.
+   # startdatetime and enddatetime must be DateTime objects.
+   # Returns an Array of Hash(s).
+
+   # The MINDBODY API doesn't accurately filter by StaffID, and StartDateTime, EndDateTime.
+   # The response returns all classes on the day before startdatetime and day of startdatetime.
+   # at the given location where the staff from staff_id_mb is teaching that day.
+   # Need to look further into this. Inconsistent results.
+
+   def get_staff_classes(staff_id_mb, startdatetime, enddatetime)
+      response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => [staff_id_mb] }, 'StartDateTime' => startdatetime, 'EndDateTime' => enddatetime )
+      classes = response.result.first[1]
+      staff_classes = []
+      classes.each_with_index do |c, i|
+         if c['staff']['id'] == staff_id_mb
+            class_data = {}
+            class_data['class_id'] = c['class_schedule_id']
+            class_data['class_id'] = c['class_schedule_id']
+            class_data['staff_name'] = c['staff']['name']
+            class_data['staff_id'] = c['staff']['id']
+            class_data['class_name'] = c['class_description']['name']
+            class_data['start_date_time'] = c['start_date_time']
+            class_data['end_date_time'] = c['end_date_time']
+
+            staff_classes << class_data
+         end
+      end
+      staff_classes
    end
 
 end

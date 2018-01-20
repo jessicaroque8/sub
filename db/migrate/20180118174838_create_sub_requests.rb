@@ -1,7 +1,7 @@
 class CreateSubRequests < ActiveRecord::Migration[5.1]
   def change
     create_table :sub_requests do |t|
-      t.date :date
+      t.datetime :datetime
       t.string :class_name
       t.integer :class_id_mb
       t.text :note
