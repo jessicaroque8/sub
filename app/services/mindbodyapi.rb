@@ -38,10 +38,6 @@ class MindBodyAPI
    # 	}
    # }
    def get_staff_classes(filters)
-      filters = filters[:filters]
-      staff_id_mb = filters[:staff_id_mb]
-      start_date_time = filters[:start_date_time]
-      end_date_time = filters[:end_date_time]
       response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => staff_id_mb.to_i }, 'StartDateTime' => start_date_time.to_datetime, 'EndDateTime' => end_date_time.to_datetime)
       classes = response.result.first[1]
       staff_classes = {}

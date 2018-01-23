@@ -36,7 +36,6 @@ class SubRequestsController < ApplicationController
    def search_classes
       mb = MindBodyAPI.new
       @staff_classes = mb.get_staff_classes(staff_classes_params)
-      byebug
       render :json => {body: @staff_classes}
    end
 
