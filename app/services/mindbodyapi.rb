@@ -29,14 +29,14 @@ class MindBodyAPI
    # at the given location where the staff from staff_id_mb is teaching that day.
    # Need to look further into this. Inconsistent results.
 
-   # options: hash of class values: staff_id_mb, startdatetime, enddatetime
-   # Ex: {
-   # 	"class": {
-   # 		"staff_id_mb": "100000164",
-   # 		"start_date_time": "2018-01-25T05:00:00.000+00:00",
-   # 		"end_date_time": "2018-01-25T06:00:00.000+00:00"
-   # 	}
-   # }
+   # filters: hash of class values: staff_id_mb, startdatetime, enddatetime
+   # Ex: filters = {
+         # 	"filters": {
+         # 		"staff_id_mb": "100000164",
+         # 		"start_date_time": "2018-01-25T05:00:00.000+00:00",
+         # 		"end_date_time": "2018-01-25T06:00:00.000+00:00"
+         # 	}
+         #}
    def get_staff_classes(filters)
       response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => filters[:staff_id_mb].to_i }, 'StartDateTime' => filters[:start_date_time].to_datetime, 'EndDateTime' => filters[:end_date_time].to_datetime)
       classes = response.result.first[1]
