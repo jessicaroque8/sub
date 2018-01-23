@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180123222757) do
+ActiveRecord::Schema.define(version: 20180123224634) do
 
   create_table "groups", force: :cascade do |t|
     t.string "name"
@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20180123222757) do
 
   create_table "sendees", force: :cascade do |t|
     t.boolean "sub", default: false
-    t.boolean "has_replied", default: false
     t.integer "sub_request_id"
     t.integer "user_id"
     t.datetime "created_at", null: false

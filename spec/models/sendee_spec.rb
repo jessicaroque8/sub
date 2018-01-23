@@ -12,11 +12,11 @@ RSpec.describe Sendee, type: :model do
    let!(:my_group) { Group.create(name: 'Yoga') }
    let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Vinyasa Yoga', class_id_mb: 1000, note: 'Please cover me')}
 
-   let!(:my_sendee) { Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id, sub: false, has_replied: false) }
+   let!(:my_sendee) { Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id, sub: false) }
 
    describe "attributes" do
-      it "has attributes sub and has_responded" do
-         expect(my_sendee).to have_attributes(sub_request_id: my_sub_request.id, user_id: my_user.id, sub: false, has_replied: false)
+      it "has attributes sub_request_id, user_id, and sub" do
+         expect(my_sendee).to have_attributes(sub_request_id: my_sub_request.id, user_id: my_user.id, sub: false)
       end
 
       it "has default: false for sub attribute" do
@@ -24,9 +24,5 @@ RSpec.describe Sendee, type: :model do
          expect(sendee.sub).to eq(false)
       end
 
-      it "has default: false for has_replied attribute" do
-         sendee = Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id)
-         expect(sendee.has_replied).to eq(false)
-      end
    end
 end
