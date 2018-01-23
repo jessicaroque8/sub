@@ -31,17 +31,23 @@ class SubRequestsController < ApplicationController
       head :no_content
    end
 
-   # Call this method before creating a new Sub Request.
-   # User should select the correct class if there are multiple array items.
+# Method: search_classes
+# Returns a JSON object containing one or more classes with the following attributes: class_id_mb, staff_name, staff_id, class_name, start_date_time, end_date_time
    def search_classes
       mb = MindBodyAPI.new
-      @classes = mb.get_staff_classes(params[:staff_id_mb], params[:start_date_time], params[:end_date_time])
+      @staff_classes = mb.get_staff_classes(staff_classes_params)
+      byebug
+      render :json => {body: @staff_classes}
    end
 
    private
 
    def sub_request_params
       params.permit(:user_id, :group_id, :class_id_mb, :start_date_time, :end_date_time, :class_name, :note)
+   end
+
+   def staff_classes_params
+      params.require(:filters).permit(:staff_id_mb, :start_date_time, :end_date_time)
    end
 
    def set_sub_request

@@ -124,11 +124,18 @@ RSpec.describe 'SubRequests API', type: :request do
    end
 
    describe "POST /search_classes" do
-      startdatetime = DateTime.new(2018, 02, 10, 00, 00, 00, 0)
-      enddatetime = DateTime.new(2018, 02, 10, 00, 00, 00, 0)
-      it "returns an array" do
-         post '/sub_requests/search_classes', params: {staff_id_mb: 100000256, start_date_time: startdatetime, end_date_time: enddatetime}
+      jennifer_id = 100000164
+      startdatetime = DateTime.new(2018, 01, 25, 00, 00, 0)
+      enddatetime = DateTime.new(2018, 01, 26, 00, 00, 0)
+      it "has http status success" do
+         post '/search_classes', params: { filters: { staff_id_mb: jennifer_id, start_date_time: startdatetime, end_date_time: enddatetime } }
          expect(response).to have_http_status(:success)
+      end
+
+      it "has the the right keys" do
+         post '/search_classes', params: { filters: { staff_id_mb: jennifer_id, start_date_time: startdatetime, end_date_time: enddatetime } }
+         expect([json][0]['class_id_mb']).to eq(2224)
+         expect([json][0]['staff_name']).to eq('Jennifer Anderson')
       end
    end
 

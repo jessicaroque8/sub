@@ -34,16 +34,34 @@ RSpec.describe MindBodyAPI do
             expect(single_staff['id']).to eq(100000315)
             expect(single_staff['first_name']).to eq(my_first_name)
             expect(single_staff['last_name']).to eq( my_last_name)
-            # expect(single_staff['email']).to be nil
-            # expect(single_staff['mobile_phone']).to be nil
-            # expect(single_staff['home_phone']).to be nil
-            # expect(single_staff['work_phone]']).to be nil
-            # expect(single_staff['login_locations']).to eq([])
          end
       end
    end
 
    context "invalid arguments" do
+   end
+
+   context "valid arguments" do
+      describe "#get_staff_classes" do
+         jennifer_id = 100000164
+         it "returns a hash of class/es" do
+            mb = MindBodyAPI.new
+            filters = { filters: { staff_id_mb: jennifer_id, start_date_time: DateTime.new(2018, 01, 26, 00, 00, 0), end_date_time: DateTime.new(2018, 01, 27, 00, 00, 0) } }
+            jennifer_classes = mb.get_staff_classes(filters)
+
+            expect(jennifer_classes).to be_an_instance_of(Hash)
+         end
+
+         it "returns classes with the same startdatetime as entered in the parameters" do
+            mb = MindBodyAPI.new
+            filters = { filters: { staff_id_mb: 100000164, start_date_time: DateTime.new(2018, 01, 26, 00, 00, 0), end_date_time: DateTime.new(2018, 01, 27, 00, 00, 0) } }
+            jennifer_classes = mb.get_staff_classes(filters)
+            input_startdate = filters[:filters][:start_date_time].to_date
+            output_startdate = jennifer_classes[1]['start_date_time'].to_date
+
+            expect(output_startdate).to eq(input_startdate)
+         end
+      end
    end
 
 end

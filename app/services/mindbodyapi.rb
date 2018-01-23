@@ -22,27 +22,45 @@ class MindBodyAPI
 
    # Gets a staff member's classes based on the specified parameters.
    # startdatetime and enddatetime must be DateTime objects.
-   # Returns an Array of Hash(s).
+   # Returns a Nested Hash.
 
    # The MINDBODY API doesn't accurately filter by StaffID, and StartDateTime, EndDateTime.
    # The response returns all classes on the day before startdatetime and day of startdatetime.
    # at the given location where the staff from staff_id_mb is teaching that day.
    # Need to look further into this. Inconsistent results.
 
-   def get_staff_classes(staff_id_mb, startdatetime, enddatetime)
-      response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => [staff_id_mb] }, 'StartDateTime' => startdatetime, 'EndDateTime' => enddatetime )
+   # options: hash of class values: staff_id_mb, startdatetime, enddatetime
+   # Ex: {
+   # 	"class": {
+   # 		"staff_id_mb": "100000164",
+   # 		"start_date_time": "2018-01-25T05:00:00.000+00:00",
+   # 		"end_date_time": "2018-01-25T06:00:00.000+00:00"
+   # 	}
+   # }
+   def get_staff_classes(filters)
+      filters = filters[:filters]
+      staff_id_mb = filters[:staff_id_mb]
+      start_date_time = filters[:start_date_time]
+      end_date_time = filters[:end_date_time]
+      response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => staff_id_mb.to_i }, 'StartDateTime' => start_date_time.to_datetime, 'EndDateTime' => end_date_time.to_datetime)
       classes = response.result.first[1]
-      staff_classes = []
-      classes.each_with_index do |c, i|
-         if c['staff']['id'] == staff_id_mb
-            class_data = {}
-            class_data['class_id_mb'] = c['class_schedule_id']
-            class_data['staff_name'] = c['staff']['name']
-            class_data['class_name'] = c['class_description']['name']
-            class_data['start_date_time'] = c['start_date_time']
-            class_data['end_date_time'] = c['end_date_time']
+      staff_classes = {}
 
-            staff_classes << class_data
+      count = 0
+      classes.each do |c|
+         if c['staff']['id'].to_i == staff_id_mb.to_i
+            if c['start_date_time'].to_date == start_date_time.to_date
+               class_data = {}
+               class_data['class_id_mb'] = c['class_schedule_id']
+               class_data['staff_name'] = c['staff']['name']
+               class_data['staff_id'] = c['staff']['id']
+               class_data['class_name'] = c['class_description']['name']
+               class_data['start_date_time'] = c['start_date_time']
+               class_data['end_date_time'] = c['end_date_time']
+
+               count += 1
+               staff_classes[count] = class_data
+            end
          end
       end
       staff_classes
