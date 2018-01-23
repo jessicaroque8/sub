@@ -8,7 +8,7 @@ RSpec.describe SubRequest, type: :model do
   startdatetime = Faker::Time.forward(23, :morning)
   enddatetime = Faker::Time.forward(23, :morning)
 
-  let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, startdatetime: startdatetime, enddatetime: enddatetime, class_name: 'Vinyasa Yoga', class_id_mb: 1000, note: 'Please cover me')}
+  let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Vinyasa Yoga', class_id_mb: 1000, note: 'Please cover me')}
 
   it { should belong_to(:group) }
   it { should belong_to(:user) }
@@ -22,7 +22,7 @@ RSpec.describe SubRequest, type: :model do
 
   describe "attributes" do
      it "has datetime, class_name, class_id_mb, note" do
-        expect(my_sub_request).to have_attributes(user_id: my_user.id, group_id: my_group.id, startdatetime: startdatetime, enddatetime: enddatetime, class_name: 'Vinyasa Yoga', class_id_mb: 1000, note: 'Please cover me')
+        expect(my_sub_request).to have_attributes(user_id: my_user.id, group_id: my_group.id, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Vinyasa Yoga', class_id_mb: 1000, note: 'Please cover me')
      end
   end
 

@@ -38,14 +38,14 @@ class MindBodyAPI
    # 	}
    # }
    def get_staff_classes(filters)
-      response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => staff_id_mb.to_i }, 'StartDateTime' => start_date_time.to_datetime, 'EndDateTime' => end_date_time.to_datetime)
+      response = MindBody::Services::ClassService.get_classes('StaffIDs' => {'ids' => filters[:staff_id_mb].to_i }, 'StartDateTime' => filters[:start_date_time].to_datetime, 'EndDateTime' => filters[:end_date_time].to_datetime)
       classes = response.result.first[1]
       staff_classes = {}
 
       count = 0
       classes.each do |c|
-         if c['staff']['id'].to_i == staff_id_mb.to_i
-            if c['start_date_time'].to_date == start_date_time.to_date
+         if c['staff']['id'].to_i == filters[:staff_id_mb].to_i
+            if c['start_date_time'].to_date == filters[:start_date_time].to_date
                class_data = {}
                class_data['class_id_mb'] = c['class_schedule_id']
                class_data['staff_name'] = c['staff']['name']
