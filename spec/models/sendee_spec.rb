@@ -18,5 +18,15 @@ RSpec.describe Sendee, type: :model do
       it "has attributes sub and has_responded" do
          expect(my_sendee).to have_attributes(sub_request_id: my_sub_request.id, user_id: my_user.id, sub: false, has_replied: false)
       end
+
+      it "has default: false for sub attribute" do
+         sendee = Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id)
+         expect(sendee.sub).to eq(false)
+      end
+
+      it "has default: false for has_replied attribute" do
+         sendee = Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id)
+         expect(sendee.has_replied).to eq(false)
+      end
    end
 end
