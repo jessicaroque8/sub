@@ -7,49 +7,40 @@ RSpec.describe 'Sendees API', type: :request do
    startdatetime = Faker::Time.forward(23, :morning)
    enddatetime = Faker::Time.forward(23, :morning)
    let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let(:my_sub_request_id) { my_sub_request.id }
 
    let!(:my_sendee) { Sendee.create(user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false) }
+   let(:my_sendee_id) { my_sendee.id }
 
-   # describe "GET /users" do
-   #    before { get '/users' }
-   #
-   #    it "returns users" do
-   #       expect(json).not_to be_empty
-   #       expect(json.size).to eq(1)
-   #    end
-   #
-   #    it 'returns status code 200' do
-   #       expect(response).to have_http_status(200)
-   #    end
-   # end
-   #
-   # describe "GET /users/:id" do
-   #    context "when the record exists" do
-   #       before { get url }
-   #
-   #       it "returns the user" do
-   #          expect(json).not_to be_empty
-   #          expect(json['id']).to eq(my_user.id)
-   #       end
-   #
-   #       it 'returns status code 200' do
-   #          expect(response).to have_http_status(200)
-   #       end
-   #    end
-   #
-   #    context "when the record does not exist" do
-   #       bad_url = '/users/' + 0.to_s
-   #       before { get bad_url }
-   #
-   #       it 'returns status code 404' do
-   #          expect(response).to have_http_status(404)
-   #       end
-   #
-   #       it 'returns a not found message' do
-   #          expect(response.body).to match (/Couldn't find User with 'id'=0/)
-   #       end
-   #    end
-   # end
+   let(:url) { "/sub_requests/" + my_sub_request_id.to_s + "/sendees/" + my_sendee_id.to_s }
+
+   describe "GET /sub_requests/:sub_request_id/sendee/:id" do
+      context "when the record exists" do
+         before { get url }
+
+         it "returns the sendee" do
+            expect(json).not_to be_empty
+            expect(json['id']).to eq(my_sendee.id)
+         end
+
+         it 'returns status code 200' do
+            expect(response).to have_http_status(200)
+         end
+      end
+
+      context "when the record does not exist" do
+         let(:bad_url) { "/sub_requests/" + my_sub_request_id.to_s + "/sendees/" + 0.to_s }
+         before { get bad_url }
+
+         it 'returns status code 404' do
+            expect(response).to have_http_status(404)
+         end
+
+         it 'returns a not found message' do
+            expect(response.body).to match (/Couldn't find Sendee with 'id'=0/)
+         end
+      end
+   end
    #
    # describe 'POST /users' do
    #    valid_attributes = { username: 'erincoffey', password: 'abc123', siteids: '-99', first_name: 'Erin', last_name: 'Coffey' }
