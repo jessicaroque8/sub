@@ -1,6 +1,6 @@
-class CreateResponses < ActiveRecord::Migration[5.1]
+class CreateReplies < ActiveRecord::Migration[5.1]
   def change
-    create_table :responses do |t|
+    create_table :replies do |t|
       t.integer :value
       t.text :note
       t.references :sendee, foreign_key: true

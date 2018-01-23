@@ -13,7 +13,7 @@ RSpec.describe SubRequest, type: :model do
   it { should belong_to(:group) }
   it { should belong_to(:user) }
   it { should have_many(:sendees) }
-  it { should have_many(:responses).through(:sendees) }
+  it { should have_many(:replies).through(:sendees) }
 
   it { should validate_presence_of(:start_date_time) }
   it { should validate_presence_of(:end_date_time) }

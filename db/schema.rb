@@ -25,19 +25,20 @@ ActiveRecord::Schema.define(version: 20180118180102) do
     t.index ["user_id", "group_id"], name: "index_groups_users_on_user_id_and_group_id", unique: true
   end
 
-  create_table "responses", force: :cascade do |t|
+  create_table "replies", force: :cascade do |t|
     t.integer "value"
     t.text "note"
     t.integer "sendee_id"
     t.integer "sub_request_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["sendee_id"], name: "index_responses_on_sendee_id"
-    t.index ["sub_request_id"], name: "index_responses_on_sub_request_id"
+    t.index ["sendee_id"], name: "index_replies_on_sendee_id"
+    t.index ["sub_request_id"], name: "index_replies_on_sub_request_id"
   end
 
   create_table "sendees", force: :cascade do |t|
     t.boolean "sub"
+    t.boolean "has_replied"
     t.integer "sub_request_id"
     t.integer "user_id"
     t.datetime "created_at", null: false
