@@ -5,6 +5,9 @@ RSpec.describe Sendee, type: :model do
    it { should belong_to(:user) }
    it { should have_one(:reply) }
 
+   it { should validate_presence_of(:sub_request_id) }
+   it { should validate_presence_of(:user_id) }
+
    startdatetime = Faker::Time.forward(23, :morning)
    enddatetime = Faker::Time.forward(23, :morning)
 
@@ -23,6 +26,13 @@ RSpec.describe Sendee, type: :model do
          sendee = Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id)
          expect(sendee.sub).to eq(false)
       end
-
    end
+
+   describe "after create" do
+      it "creates a reply associated with the sendee" do
+         expect{Sendee.create(sub_request_id: my_sub_request.id, user_id: my_user.id, sub: false)}.to change(Reply,:count).by (1)
+         expect(Reply.first).to have_attributes(sendee_id: my_sendee.id, sub_request_id: my_sub_request.id)
+      end
+   end
+
 end

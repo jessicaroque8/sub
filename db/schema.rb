@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180123224634) do
+ActiveRecord::Schema.define(version: 20180124184542) do
 
   create_table "groups", force: :cascade do |t|
     t.string "name"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20180123224634) do
   end
 
   create_table "replies", force: :cascade do |t|
-    t.integer "value"
+    t.integer "value", default: 0
     t.text "note"
     t.integer "sendee_id"
     t.integer "sub_request_id"
