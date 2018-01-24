@@ -3,6 +3,7 @@ Rails.application.routes.draw do
    resources :groups
    resources :users
    resources :sub_requests do
+      post '/send' => 'sub_requests#send_to_sendees', as: :send
       resources :sendees, only: [:show, :create, :update, :destroy]
    end
 

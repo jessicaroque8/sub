@@ -19,6 +19,10 @@ Group.create!(name: 'Yoga Assist')
 Group.create!(name: 'Fitness Assist')
 groups = Group.all
 
+users.each do |user|
+   user.groups << groups.sample
+end
+
 SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 1111, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
 SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 2222, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
 SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 3333, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)

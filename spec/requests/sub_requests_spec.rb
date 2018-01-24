@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'json'
 
 RSpec.describe 'SubRequests API', type: :request do
    let(:my_user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey')}
@@ -136,6 +137,44 @@ RSpec.describe 'SubRequests API', type: :request do
          post '/search_classes', params: { filters: { staff_id_mb: jennifer_id, start_date_time: startdatetime, end_date_time: enddatetime } }
          expect([json][0]['class_id_mb']).to eq(2224)
          expect([json][0]['staff_name']).to eq('Jennifer Anderson')
+      end
+   end
+
+   describe "POST /sub_requests/:id/send" do
+      before { my_user.groups << Group.find(my_group.id) }
+      it "assigns the current sub_request to @sub_request" do
+         post '/sub_requests/1/send', params: { id: my_sub_request.id }
+         expect(assigns(:sub_request)).to eq(my_sub_request)
+      end
+
+      it "assigns sub_request's group to @group" do
+         post '/sub_requests/1/send', params: { id: my_sub_request.id }
+         expect(assigns(:group)).to eq(my_group)
+      end
+
+      it "creates @sendees as a hash" do
+         post '/sub_requests/1/send', params: { id: my_sub_request.id }
+         expect(assigns(:sendees)).to be_an_instance_of(Hash)
+      end
+
+      it "creates a sendee for each of the group's users" do
+         sendees_before = Sendee.where(sub_request_id: my_sub_request.id).size
+         user_count = my_group.users.size
+         post '/sub_requests/1/send', params: { id: my_sub_request.id }
+         sendees_after = Sendee.where(sub_request_id: my_sub_request.id).size
+
+         expect(sendees_before).to eq(0)
+         expect(sendees_after).to eq(user_count)
+      end
+
+      it "has http status success" do
+         post '/sub_requests/1/send', params: { id: my_sub_request.id }
+         expect(response).to have_http_status(:success)
+      end
+
+      it "returns the sendees in JSON" do
+         expect(json[0]['user_id']).to eq(my_user.id)
+         expect(json[0]['sub_request_id']).to eq(my_sub_request.id)
       end
    end
 
