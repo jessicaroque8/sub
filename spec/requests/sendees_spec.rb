@@ -20,7 +20,7 @@ RSpec.describe 'Sendees API', type: :request do
 
          it "returns the sendee" do
             expect(json).not_to be_empty
-            expect(json['id']).to eq(my_sendee.id)
+            expect(json['id']).to eq(my_sendee_id)
          end
 
          it 'returns status code 200' do
@@ -41,70 +41,84 @@ RSpec.describe 'Sendees API', type: :request do
          end
       end
    end
-   #
-   # describe 'POST /users' do
-   #    valid_attributes = { username: 'erincoffey', password: 'abc123', siteids: '-99', first_name: 'Erin', last_name: 'Coffey' }
-   #
-   #    invalid_attributes = { username: 'yogi1', password: 'abc1234', siteids: '-99', first_name: 'Someone', last_name: 'NoExist' }
-   #
-   #    context 'when the request is valid' do
-   #       before { post '/users', params: valid_attributes }
-   #
-   #       it 'retrieves from the MINDBODY API the user data' do
-   #          expect(assigns(:mb_data)).not_to be_nil
-   #          expect(assigns(:mb_data)).to be_an_instance_of(Hash)
-   #       end
-   #
-   #       it 'creates a user using the data from MINDBODY' do
-   #          expect(json['staff_id_mb']).to eq(100000315)
-   #          expect(json['first_name']).to eq('Erin')
-   #          expect(json['last_name']).to eq('Coffey')
-   #       end
-   #
-   #       it 'returns status code 201' do
-   #          expect(response).to have_http_status(201)
-   #       end
-   #    end
-   #
-   #    context 'when the request is invalid' do
-   #       before { post '/users', params: invalid_attributes }
-   #
-   #       it 'returns status code 422' do
-   #          expect(response).to have_http_status(422)
-   #       end
-   #
-   #       it 'returns a validation failure message' do
-   #          expect(response.body).to match(/Validation failed: Staff id mb can't be blank/)
-   #       end
-   #    end
-   # end
-   #
-   # describe 'PUT /users/:id' do
-   #    valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey-Bean' }
-   #
-   #    context 'when the record exists' do
-   #       before { put url, params: valid_attributes }
-   #
-   #       it 'updates the record' do
-   #          expect(response.body).to be_empty
-   #       end
-   #
-   #       it 'returns status code 204' do
-   #          expect(response).to have_http_status(204)
-   #       end
-   #    end
-   # end
-   #
-   # describe 'DELETE /users/:id' do
-   #    valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey' }
-   #
-   #    context 'when the record exists' do
-   #       before { delete url }
-   #
-   #       it 'returns status code 204' do
-   #          expect(response).to have_http_status(204)
-   #       end
-   #    end
-   # end
+
+   describe 'POST /sub_requests/:sub_request_id/sendees' do
+
+      context 'when the request is valid' do
+
+         it "increases the number of Sendee by 1" do
+            expect { post "/sub_requests/1/sendees/", params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false } }.to change(Sendee,:count).by(1)
+         end
+
+         it 'assigns the new sendee to @sendee' do
+            post "/sub_requests/1/sendees/", params: { user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }
+
+            expect(assigns(:sendee)).to eq(Sendee.last)
+         end
+
+         it 'returns status code 201' do
+            post "/sub_requests/1/sendees/", params: { user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }
+
+            expect(response).to have_http_status(201)
+         end
+      end
+
+      context 'when the request is invalid' do
+
+         it 'returns status code 422' do
+            post "/sub_requests/1/sendees/", params: { sub_request_id: my_sub_request.id, sub: false }
+            expect(response).to have_http_status(422)
+         end
+
+         it 'returns a validation failure message' do
+            post "/sub_requests/1/sendees/", params: { sub_request_id: my_sub_request.id, sub: false }
+            expect(response.body).to match(/Validation failed: User must exist/)
+         end
+      end
+   end
+
+   describe 'PUT /sub_requests/1/sendees/1' do
+      context 'when the record exists' do
+         # before { put '/sub_requests/1/sendees/1', params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+
+         it "updates the record" do
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+
+            updated_sendee = assigns(:sendee)
+
+            expect(updated_sendee.id).to eq my_sendee.id
+            expect(updated_sendee.user_id).to eq my_sendee.user_id
+            expect(updated_sendee.sub_request_id).to eq my_sendee.sub_request_id
+            expect(updated_sendee.sub).to eq my_sendee.sub
+         end
+
+         it 'returns an empty body' do
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+            expect(response.body).to be_empty
+         end
+
+         it 'returns status code 204' do
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+            expect(response).to have_http_status(204)
+         end
+      end
+   end
+   
+   describe 'DELETE /sub_requests/1/sendees/1' do
+
+      context 'when the record exists' do
+         before { delete '/sub_requests/1/sendees/1' }
+
+         it 'returns status code 204' do
+            expect(response).to have_http_status(204)
+         end
+
+         it 'deletes the Sendee' do
+            delete '/sub_requests/1/sendees/1'
+            count = Sendee.where({id: my_sendee.id}).size
+            expect(count).to eq(0)
+         end
+      end
+   end
 
 end
