@@ -15,7 +15,22 @@ class SendeesController < ApplicationController
   end
 
   def update
-     @sendee.update(sendee_params)
+     before_sub_val = @sendee.sub
+     before_confirmed_val = @sendee.confirmed
+
+     @sendee.update!(sendee_params)
+
+     after_sub_val = @sendee.sub
+     after_confirmed_val = @sendee.confirmed
+
+     if before_sub_val == false && after_sub_val == true
+        @sendee.confirmed = false
+        @sendee.save!
+     elsif before_sub_val == true && after_sub_val == false
+        @sendee.confirmed = nil
+        @sendee.save!
+     end
+
      head :no_content
   end
 

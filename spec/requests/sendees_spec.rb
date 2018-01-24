@@ -78,32 +78,70 @@ RSpec.describe 'Sendees API', type: :request do
    end
 
    describe 'PUT /sub_requests/1/sendees/1' do
-      context 'when the record exists' do
+      # context 'when the record exists' do
          # before { put '/sub_requests/1/sendees/1', params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
 
-         it "updates the record" do
+      #    it "updates the record" do
+      #       put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+      #
+      #       updated_sendee = assigns(:sendee)
+      #
+      #       expect(updated_sendee.id).to eq my_sendee.id
+      #       expect(updated_sendee.user_id).to eq my_sendee.user_id
+      #       expect(updated_sendee.sub_request_id).to eq my_sendee.sub_request_id
+      #       expect(updated_sendee.sub).to eq my_sendee.sub
+      #    end
+      #
+      #    it 'returns an empty body' do
+      #       put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+      #       expect(response.body).to be_empty
+      #    end
+      #
+      #    it 'returns status code 204' do
+      #       put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+      #       expect(response).to have_http_status(204)
+      #    end
+      # end
+
+      context "if designating a @sendee as the sub" do
+         let(:before_sub) { my_sendee.sub }
+         let(:before_confirmed) { my_sendee.confirmed}
+
+         it 'sets @sendee.confirmed as false' do
             put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+            my_sendee.reload
 
-            updated_sendee = assigns(:sendee)
+            after_sub = my_sendee.sub
+            after_confirmed = my_sendee.confirmed
 
-            expect(updated_sendee.id).to eq my_sendee.id
-            expect(updated_sendee.user_id).to eq my_sendee.user_id
-            expect(updated_sendee.sub_request_id).to eq my_sendee.sub_request_id
-            expect(updated_sendee.sub).to eq my_sendee.sub
+            expect(before_sub).to eq(false)
+            expect(after_sub).to eq(true)
+            expect(before_confirmed).to eq(nil)
+            expect(after_confirmed).to eq(false)
          end
+      end
 
-         it 'returns an empty body' do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
-            expect(response.body).to be_empty
-         end
+      context "if removing @sendee as the sub" do
+         before { put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
+}
+         let(:before_sub) { my_sendee.sub }
+         let(:before_confirmed) { my_sendee.confirmed }
 
-         it 'returns status code 204' do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
-            expect(response).to have_http_status(204)
+         it 'sets @sendee.confirmed as nil' do
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false } }
+            my_sendee.reload
+
+            after_sub = my_sendee.sub
+            after_confirmed = my_sendee.confirmed
+
+            expect(before_sub).to eq(true)
+            expect(after_sub).to eq(false)
+            expect(before_confirmed).to eq(false)
+            expect(after_confirmed).to eq(nil)
          end
       end
    end
-   
+
    describe 'DELETE /sub_requests/1/sendees/1' do
 
       context 'when the record exists' do
