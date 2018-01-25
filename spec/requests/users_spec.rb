@@ -1,12 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
-   let!(:my_user) { User.create(staff_id_mb: 100000333, first_name: 'Kali', last_name: 'Shakti') }
+   let!(:my_user) { User.create(staff_id_mb: 100000333, first_name: 'Kali', last_name: 'Shakti', email: 'kali@email.com', password: 'abc123', password_confirmation: 'abc123') }
    let(:my_user_id) { my_user.id }
    let(:url) { '/users/' + my_user_id.to_s }
 
+   def authenticated_header
+      token = Knock::AuthToken.new(payload: { sub: my_user.id }).token
+      {
+        'Authorization': "Bearer #{token}"
+      }
+   end
+
    describe "GET /users" do
-      before { get '/users' }
+      before { get '/users', headers: authenticated_header }
 
       it "returns users" do
          expect(json).not_to be_empty
@@ -20,7 +27,7 @@ RSpec.describe 'Users API', type: :request do
 
    describe "GET /users/:id" do
       context "when the record exists" do
-         before { get url }
+         before { get url, headers: authenticated_header }
 
          it "returns the user" do
             expect(json).not_to be_empty
@@ -34,7 +41,7 @@ RSpec.describe 'Users API', type: :request do
 
       context "when the record does not exist" do
          bad_url = '/users/' + 0.to_s
-         before { get bad_url }
+         before { get bad_url, headers: authenticated_header }
 
          it 'returns status code 404' do
             expect(response).to have_http_status(404)
@@ -47,22 +54,25 @@ RSpec.describe 'Users API', type: :request do
    end
 
    describe 'POST /users' do
-      valid_attributes = { username: 'erincoffey', password: 'abc123', siteids: '-99', first_name: 'Erin', last_name: 'Coffey' }
+      valid_attributes = { mb_username: 'jennifersmbologin', mb_password: 'abc123', mb_siteids: -99, first_name: 'Jennifer', last_name: 'Anderson', email: 'jennifer@email.com', password: 'abc123', password_confirmation: 'abc123' }
 
-      invalid_attributes = { username: 'yogi1', password: 'abc1234', siteids: '-99', first_name: 'Someone', last_name: 'NoExist' }
+      invalid_attributes = { first_name: 'Kali', last_name: 'Shakti' }
 
       context 'when the request is valid' do
-         before { post '/users', params: valid_attributes }
+         before { post '/users', params: valid_attributes, headers: authenticated_header }
 
          it 'retrieves from the MINDBODY API the user data' do
             expect(assigns(:mb_data)).not_to be_nil
+            expect(assigns(:mb_data['id']).to eq(100000164)
             expect(assigns(:mb_data)).to be_an_instance_of(Hash)
          end
 
          it 'creates a user using the data from MINDBODY' do
-            expect(json['staff_id_mb']).to eq(100000315)
-            expect(json['first_name']).to eq('Erin')
-            expect(json['last_name']).to eq('Coffey')
+            expect(json['staff_id_mb']).to eq(100000164)
+            expect(json['first_name']).to eq('Jennifer')
+            expect(json['last_name']).to eq('Anderson')
+            expect(json['email']).to eq('jennifer@email.com')
+            expect(json['password_digest']).to_not be(nil)
          end
 
          it 'returns status code 201' do
@@ -71,14 +81,14 @@ RSpec.describe 'Users API', type: :request do
       end
 
       context 'when the request is invalid' do
-         before { post '/users', params: invalid_attributes }
+         before { post '/users', params: invalid_attributes, headers: authenticated_header }
 
          it 'returns status code 422' do
             expect(response).to have_http_status(422)
          end
 
          it 'returns a validation failure message' do
-            expect(response.body).to match(/Validation failed: Staff id mb can't be blank/)
+            expect(response.body).to match(/Validation failed: Password can't be blank, Password digest can't be blank, Email can't be blank/)
          end
       end
    end
@@ -87,7 +97,7 @@ RSpec.describe 'Users API', type: :request do
       valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey-Bean' }
 
       context 'when the record exists' do
-         before { put url, params: valid_attributes }
+         before { put url, params: valid_attributes, headers: authenticated_header }
 
          it 'updates the record' do
             expect(response.body).to be_empty
@@ -103,7 +113,7 @@ RSpec.describe 'Users API', type: :request do
       valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey' }
 
       context 'when the record exists' do
-         before { delete url }
+         before { delete url, headers: authenticated_header }
 
          it 'returns status code 204' do
             expect(response).to have_http_status(204)

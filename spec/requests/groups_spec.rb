@@ -4,9 +4,17 @@ RSpec.describe 'Groups API', type: :request do
    let!(:group) { Group.create(name: 'Vinyasa Yoga') }
    let(:group_id) { group.id }
    let(:url) { '/groups/' + group_id.to_s }
+   let(:user) {User.create(first_name: 'Lakshmi', last_name: 'Ganesha', email: 'test@email.com', password: 'abc12345', password_confirmation: 'abc12345')}
+
+    def authenticated_header
+       token = Knock::AuthToken.new(payload: { sub: user.id }).token
+       {
+          'Authorization': "Bearer #{token}"
+       }
+    end
 
    describe "GET /groups" do
-      before { get '/groups' }
+      before { get '/groups', headers: authenticated_header }
 
       it "returns groups" do
          expect(json).not_to be_empty
@@ -20,7 +28,7 @@ RSpec.describe 'Groups API', type: :request do
 
    describe "GET /groups/:id" do
       context "when the record exists" do
-         before { get url }
+         before { get url, headers: authenticated_header }
 
          it "returns the group" do
             expect(json).not_to be_empty
@@ -34,7 +42,7 @@ RSpec.describe 'Groups API', type: :request do
 
       context "when the record does not exist" do
          bad_url = '/groups/' + 5.to_s
-         before { get bad_url }
+         before { get bad_url, headers: authenticated_header }
 
          it 'returns status code 404' do
             expect(response).to have_http_status(404)
@@ -50,7 +58,7 @@ RSpec.describe 'Groups API', type: :request do
       valid_attributes = { name: 'Heated Yoga' }
 
       context 'when the request is valid' do
-         before { post '/groups', params: valid_attributes }
+         before { post '/groups', params: valid_attributes, headers: authenticated_header }
 
          it 'creates a group' do
             expect(json['name']).to eq('Heated Yoga')
@@ -62,7 +70,7 @@ RSpec.describe 'Groups API', type: :request do
       end
 
       context 'when the request is invalid' do
-         before { post '/groups' }
+         before { post '/groups', headers: authenticated_header }
 
          it 'returns status code 422' do
             expect(response).to have_http_status(422)
@@ -78,7 +86,7 @@ RSpec.describe 'Groups API', type: :request do
       valid_attributes = { name: 'Pilates' }
 
       context 'when the record exists' do
-         before { put '/groups/1', params: valid_attributes }
+         before { put '/groups/1', params: valid_attributes, headers: authenticated_header }
 
          it 'updates the record' do
             expect(response.body).to be_empty
@@ -94,7 +102,7 @@ RSpec.describe 'Groups API', type: :request do
       valid_attributes = { name: 'Pilates' }
 
       context 'when the record exists' do
-         before { delete '/groups/1' }
+         before { delete '/groups/1', headers: authenticated_header }
 
          it 'returns status code 204' do
             expect(response).to have_http_status(204)
