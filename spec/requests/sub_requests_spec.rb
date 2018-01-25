@@ -5,8 +5,8 @@ RSpec.describe 'SubRequests API', type: :request do
    let(:my_user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey')}
    let(:my_group) { Group.create(name: 'Yoga') }
 
-   startdatetime = Faker::Time.forward(23, :morning)
-   enddatetime = Faker::Time.forward(23, :morning)
+   startdatetime = DateTime.new(2018, 01, 27, 07, 00, 00)
+   enddatetime = DateTime.new(2018, 01, 27, 07, 45, 00)
    let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
    let(:url) { '/sub_requests/' + my_sub_request.id.to_s }
 
@@ -52,22 +52,25 @@ RSpec.describe 'SubRequests API', type: :request do
    end
 
    describe 'POST /sub_requests' do
-      otherstartdatetime = Faker::Time.forward(24, :morning)
-      otherenddatetime = Faker::Time.forward(24, :morning)
+      otherstartdatetime = DateTime.new(2018, 01, 28, 07, 00, 00)
+      otherenddatetime = DateTime.new(2018, 01, 28, 07, 45, 00)
       another_user = User.create(staff_id_mb: 100000316, first_name: 'Sasha', last_name: 'Fierce')
       another_group = Group.create(name: 'Fitness')
-      valid_attributes = { user_id: another_user.id, group_id: another_group.id, class_id_mb: 2342, start_date_time: otherstartdatetime, end_date_time: otherenddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
+      valid_attributes = { user_id: another_user.id, group_id: another_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
 
       invalid_attributes = { user_id: another_user.id, group_id: another_group.id, start_date_time: otherstartdatetime, end_date_time: otherenddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
 
+      expect_sdt = startdatetime.to_json.to_s.delete! '\"'
+      expect_edt = enddatetime.to_json.to_s.delete! '\"'
       context 'when the request is valid' do
          before { post '/sub_requests', params: valid_attributes }
 
          it 'creates a SubRequest' do
+            byebug
             expect(json['user_id']).to eq(another_user.id)
             expect(json['group_id']).to eq(another_group.id)
-            expect(json['start_date_time']).to eq(otherstartdatetime)
-            expect(json['end_date_time']).to eq(otherenddatetime)
+            expect(json['start_date_time']).to eq(expect_sdt)
+            expect(json['end_date_time']).to eq(expect_edt)
             expect(json['class_name']).to eq('Heated Yoga')
             expect(json['class_id_mb']).to eq(2342)
             expect(json['note']).to eq('Please sub me!')
@@ -135,8 +138,15 @@ RSpec.describe 'SubRequests API', type: :request do
 
       it "has the the right keys" do
          post '/search_classes', params: { filters: { staff_id_mb: jennifer_id, start_date_time: startdatetime, end_date_time: enddatetime } }
-         expect([json][0]['class_id_mb']).to eq(2224)
-         expect([json][0]['staff_name']).to eq('Jennifer Anderson')
+         expect_sdt = DateTime.new(2018, 01, 25, 07, 00, 00, 00).to_json.to_s.delete! '\"'
+         expect_edt = DateTime.new(2018, 01, 25, 07, 45, 00, 00).to_json.to_s.delete! '\"'
+
+         expect(json["0"]['class_id_mb']).to eq(25140)
+         expect(json["0"]['staff_name']).to eq('Jennifer Anderson')
+         expect(json["0"]['staff_id']).to eq(100000164)
+         expect(json["0"]['class_name']).to eq("Pilates 101")
+         expect(json["0"]['start_date_time']).to eq(expect_sdt)
+         expect(json["0"]['end_date_time']).to eq(expect_edt)
       end
    end
 
@@ -173,8 +183,9 @@ RSpec.describe 'SubRequests API', type: :request do
       end
 
       it "returns the sendees in JSON" do
-         expect(json[0]['user_id']).to eq(my_user.id)
-         expect(json[0]['sub_request_id']).to eq(my_sub_request.id)
+         post '/sub_requests/1/send', params: { id: my_sub_request.id }
+         expect(json["0"]['user_id']).to eq(my_user.id)
+         expect(json["0"]['sub_request_id']).to eq(my_sub_request.id)
       end
    end
 

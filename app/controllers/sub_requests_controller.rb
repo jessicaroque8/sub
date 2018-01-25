@@ -36,7 +36,7 @@ class SubRequestsController < ApplicationController
    def search_classes
       mb = MindBodyAPI.new
       @staff_classes = mb.get_staff_classes(staff_classes_params)
-      render :json => @staff_classes
+      json_response(@staff_classes, :success)
    end
 
    def send_to_sendees
@@ -46,7 +46,7 @@ class SubRequestsController < ApplicationController
       @group.users.each_with_index do |sendee, index|
          @sendees[index] = Sendee.create!(user: sendee, sub_request: @sub_request, sub: false)
       end
-      render :json => @sendees
+      json_response(@sendees, :sent)
    end
 
    private

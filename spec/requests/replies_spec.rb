@@ -9,7 +9,7 @@ RSpec.describe 'Replies API', type: :request do
    let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
    let!(:my_sendee) { Sendee.create(user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false) }
 
-   let!(:my_reply) { Reply.create(sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "maybe", note: 'I think I\'m able to but I\'m checking with my other job first.')}
+   let!(:my_reply) { my_sendee.reply }
 
    let(:url) { "/sub_requests/" + my_sub_request.id.to_s + "/sendees/" + my_sendee.id.to_s + '/replies/' + my_reply.id.to_s }
 

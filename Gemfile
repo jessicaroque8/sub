@@ -49,6 +49,10 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'mindbody-api'
+# gem 'mindbody-api'
+
+gem 'mindbody-api', path: '~/Bloc/sub/mindbody-api-1.0.1.alpha'
 
 gem 'figaro'
+
+gem 'savon'
