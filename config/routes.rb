@@ -8,7 +8,7 @@ Rails.application.routes.draw do
          resources :replies, only: [:show, :create, :update, :destroy]
       end
    end
-
    post '/search_classes' => 'sub_requests#search_classes', as: :search_classes
+   post 'user_token' => 'user_token#create'
 
 end

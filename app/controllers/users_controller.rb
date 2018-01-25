@@ -4,7 +4,8 @@ class UsersController < ApplicationController
 
    include Response
    include ExceptionHandler
-
+   
+   before_action :authenticate_user, only: [:index, :show, :update, :destroy]
    before_action :set_user, only: [:show, :update, :destroy]
 
    def index

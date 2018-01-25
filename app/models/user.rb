@@ -4,5 +4,7 @@ class User < ApplicationRecord
   has_many :sub_requests, through: :sendees
   has_many :replies, through: :sendees
 
+  has_secure_password
+
   validates :staff_id_mb, presence: true
 end
