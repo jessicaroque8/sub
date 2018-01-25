@@ -52,8 +52,8 @@ RSpec.describe 'SubRequests API', type: :request do
    end
 
    describe 'POST /sub_requests' do
-      otherstartdatetime = DateTime.new(2018, 01, 28, 07, 00, 00)
-      otherenddatetime = DateTime.new(2018, 01, 28, 07, 45, 00)
+      otherstartdatetime = DateTime.new(2018, 01, 28, 07, 00, 00, 0)
+      otherenddatetime = DateTime.new(2018, 01, 28, 07, 45, 00, 0)
       another_user = User.create(staff_id_mb: 100000316, first_name: 'Sasha', last_name: 'Fierce')
       another_group = Group.create(name: 'Fitness')
       valid_attributes = { user_id: another_user.id, group_id: another_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Heated Yoga', note: 'Please sub me!' }
@@ -66,7 +66,6 @@ RSpec.describe 'SubRequests API', type: :request do
          before { post '/sub_requests', params: valid_attributes }
 
          it 'creates a SubRequest' do
-            byebug
             expect(json['user_id']).to eq(another_user.id)
             expect(json['group_id']).to eq(another_group.id)
             expect(json['start_date_time']).to eq(expect_sdt)
@@ -133,6 +132,7 @@ RSpec.describe 'SubRequests API', type: :request do
       enddatetime = DateTime.new(2018, 01, 26, 00, 00, 0)
       it "has http status success" do
          post '/search_classes', params: { filters: { staff_id_mb: jennifer_id, start_date_time: startdatetime, end_date_time: enddatetime } }
+         byebug
          expect(response).to have_http_status(:success)
       end
 

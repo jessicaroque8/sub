@@ -61,7 +61,6 @@ class MindBodyAPI
             end
          end
       end
-
       staff_classes
    end
 
@@ -89,7 +88,6 @@ class MindBodyAPI
    end
 
 # 25140, 100000270
-# STaff
    def sub_class_teacher(class_id, sub_staff_id)
       response = MindBody::Services::ClassService.substitute_class_teacher(
          "SourceCredentials" =>
