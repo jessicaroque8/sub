@@ -1,0 +1,401 @@
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateGroups (20180118174328)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "groups" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180118174328"]]
+  [1m[35m (0.8ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateUsers (20180118174711)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "staff_id_mb" integer, "first_name" varchar, "last_name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180118174711"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateSubRequests (20180118174838)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "sub_requests" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "start_date_time" datetime NOT NULL, "end_date_time" datetime, "class_name" varchar, "class_id_mb" integer, "note" text, "group_id" integer, "user_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_a9e61f9f23"
+FOREIGN KEY ("group_id")
+  REFERENCES "groups" ("id")
+, CONSTRAINT "fk_rails_4383f08361"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE  INDEX "index_sub_requests_on_group_id" ON "sub_requests" ("group_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sub_requests_on_group_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sub_requests_on_group_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sub_requests_on_user_id" ON "sub_requests" ("user_id")[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180118174838"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateSendees (20180118174910)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "sendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean, "has_replied" boolean, "sub_request_id" integer, "user_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_02162241d5"
+FOREIGN KEY ("sub_request_id")
+  REFERENCES "sub_requests" ("id")
+, CONSTRAINT "fk_rails_1ecc4407e2"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_sub_request_id" ON "sendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_user_id" ON "sendees" ("user_id")[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180118174910"]]
+  [1m[35m (0.9ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateReplies (20180118174938)
+  [1m[35m (0.2ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "replies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "value" integer, "note" text, "sendee_id" integer, "sub_request_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_ab190f0e1a"
+FOREIGN KEY ("sendee_id")
+  REFERENCES "sendees" ("id")
+, CONSTRAINT "fk_rails_7e25dda319"
+FOREIGN KEY ("sub_request_id")
+  REFERENCES "sub_requests" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE  INDEX "index_replies_on_sendee_id" ON "replies" ("sendee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE  INDEX "index_replies_on_sub_request_id" ON "replies" ("sub_request_id")[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180118174938"]]
+  [1m[35m (0.9ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateJoinTableGroupUser (20180118180102)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "groups_users" ("group_id" integer NOT NULL, "user_id" integer NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_groups_users_on_group_id_and_user_id" ON "groups_users" ("group_id", "user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_groups_users_on_group_id_and_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_groups_users_on_group_id_and_user_id' AND type='index'
+[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_groups_users_on_user_id_and_group_id" ON "groups_users" ("user_id", "group_id")[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180118180102"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddDefaultValueToSubAttribute (20180123222626)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT NULL, "has_replied" boolean DEFAULT NULL, "sub_request_id" integer DEFAULT NULL, "user_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_asendees_on_user_id" ON "asendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_asendees_on_sub_request_id" ON "asendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asendees" ("id","sub","has_replied","sub_request_id","user_id","created_at","updated_at")
+                     SELECT "id","sub","has_replied","sub_request_id","user_id","created_at","updated_at" FROM "sendees"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE "sendees"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "sendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT 'f', "has_replied" boolean DEFAULT NULL, "sub_request_id" integer DEFAULT NULL, "user_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_asendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_asendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_asendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_asendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_sub_request_id" ON "sendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_user_id" ON "sendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("id","sub","has_replied","sub_request_id","user_id","created_at","updated_at")
+                     SELECT "id","sub","has_replied","sub_request_id","user_id","created_at","updated_at" FROM "asendees"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asendees"[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180123222626"]]
+  [1m[35m (0.8ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddDefaultValueToHasRepliedAttribute (20180123222757)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT 'f', "has_replied" boolean DEFAULT NULL, "sub_request_id" integer DEFAULT NULL, "user_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_asendees_on_user_id" ON "asendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_asendees_on_sub_request_id" ON "asendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asendees" ("id","sub","has_replied","sub_request_id","user_id","created_at","updated_at")
+                     SELECT "id","sub","has_replied","sub_request_id","user_id","created_at","updated_at" FROM "sendees"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE "sendees"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "sendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT 'f', "has_replied" boolean DEFAULT 'f', "sub_request_id" integer DEFAULT NULL, "user_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_asendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_asendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_asendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_asendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_sub_request_id" ON "sendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_user_id" ON "sendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("id","sub","has_replied","sub_request_id","user_id","created_at","updated_at")
+                     SELECT "id","sub","has_replied","sub_request_id","user_id","created_at","updated_at" FROM "asendees"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "asendees"[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180123222757"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to RemoveHasRepliedFromSendees (20180123224634)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT 'f', "has_replied" boolean DEFAULT 'f', "sub_request_id" integer DEFAULT NULL, "user_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_asendees_on_user_id" ON "asendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_asendees_on_sub_request_id" ON "asendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "asendees" ("id","sub","has_replied","sub_request_id","user_id","created_at","updated_at")
+                     SELECT "id","sub","has_replied","sub_request_id","user_id","created_at","updated_at" FROM "sendees"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE "sendees"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "sendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT 'f', "sub_request_id" integer DEFAULT NULL, "user_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_asendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_asendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_asendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_asendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_sub_request_id" ON "sendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_user_id" ON "sendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("id","sub","sub_request_id","user_id","created_at","updated_at")
+                     SELECT "id","sub","sub_request_id","user_id","created_at","updated_at" FROM "asendees"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "asendees"[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180123224634"]]
+  [1m[35m (0.8ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddDefaultValueToValueAttribute (20180124184542)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "areplies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "value" integer DEFAULT NULL, "note" text DEFAULT NULL, "sendee_id" integer DEFAULT NULL, "sub_request_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_areplies_on_sub_request_id" ON "areplies" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "tindex_areplies_on_sendee_id" ON "areplies" ("sendee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "areplies" ("id","value","note","sendee_id","sub_request_id","created_at","updated_at")
+                     SELECT "id","value","note","sendee_id","sub_request_id","created_at","updated_at" FROM "replies"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mDROP TABLE "replies"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "replies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "value" integer DEFAULT 0 NOT NULL, "note" text DEFAULT NULL, "sendee_id" integer DEFAULT NULL, "sub_request_id" integer DEFAULT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_areplies_on_sendee_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_areplies_on_sendee_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='tindex_areplies_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='tindex_areplies_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_replies_on_sendee_id" ON "replies" ("sendee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_replies_on_sub_request_id" ON "replies" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "replies" ("id","value","note","sendee_id","sub_request_id","created_at","updated_at")
+                     SELECT "id","value","note","sendee_id","sub_request_id","created_at","updated_at" FROM "areplies"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "areplies"[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180124184542"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddConfirmedToSendee (20180124191043)
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.0ms)[0m  [1m[35mALTER TABLE "sendees" ADD "confirmed" boolean[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20180124191043"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2018-01-26 23:50:46.775656"], ["updated_at", "2018-01-26 23:50:46.775656"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_groups_users_on_user_id_and_group_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_groups_users_on_user_id_and_group_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_groups_users_on_group_id_and_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_groups_users_on_group_id_and_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sub_requests_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sub_requests_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sub_requests_on_group_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sub_requests_on_group_id' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.7ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:50:52.568564"], ["updated_at", "2018-01-26 23:50:52.568564"]]
+  [1m[35m (1.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:50:59.467071"], ["updated_at", "2018-01-26 23:50:59.467071"]]
+  [1m[35m (0.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mGroup Load (0.2ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (2.7ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-01-01 00:00:00"], ["end_date_time", "2018-01-01 00:00:00"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:52:45.110474"], ["updated_at", "2018-01-26 23:52:45.110474"]]
+  [1m[35m (0.9ms)[0m  [1m[36mcommit transaction[0m

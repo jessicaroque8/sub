@@ -1,0 +1,371 @@
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "groups"[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "groups" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "groups_users"[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE TABLE "groups_users" ("group_id" integer NOT NULL, "user_id" integer NOT NULL)[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_groups_users_on_group_id_and_user_id" ON "groups_users" ("group_id", "user_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_groups_users_on_group_id_and_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_groups_users_on_group_id_and_user_id' AND type='index'
+[0m
+  [1m[35m (1.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_groups_users_on_user_id_and_group_id" ON "groups_users" ("user_id", "group_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "replies"[0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE TABLE "replies" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "value" integer DEFAULT 0, "note" text, "sendee_id" integer, "sub_request_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX "index_replies_on_sendee_id" ON "replies" ("sendee_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_replies_on_sendee_id' AND type='index'
+[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX "index_replies_on_sub_request_id" ON "replies" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "sendees"[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "sendees" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "sub" boolean DEFAULT 'f', "sub_request_id" integer, "user_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "confirmed" boolean)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_sub_request_id" ON "sendees" ("sub_request_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sendees_on_sub_request_id' AND type='index'
+[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX "index_sendees_on_user_id" ON "sendees" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "sub_requests"[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "sub_requests" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "start_date_time" datetime, "end_date_time" datetime, "class_name" varchar, "class_id_mb" integer, "note" text, "group_id" integer, "user_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX "index_sub_requests_on_group_id" ON "sub_requests" ("group_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_sub_requests_on_group_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_sub_requests_on_group_id' AND type='index'
+[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE  INDEX "index_sub_requests_on_user_id" ON "sub_requests" ("user_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "users"[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "staff_id_mb" integer, "first_name" varchar, "last_name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.9ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20180124191043)[0m
+  [1m[35m (1.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20180118174328),
+(20180118174711),
+(20180118174838),
+(20180118174910),
+(20180118174938),
+(20180118180102),
+(20180123222626),
+(20180123222757),
+(20180123224634),
+(20180124184542);
+
+[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "test"], ["created_at", "2018-01-26 23:36:54.421881"], ["updated_at", "2018-01-26 23:36:54.421881"]]
+  [1m[35m (0.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (1.4ms)[0m  [1m[31mDELETE FROM "groups";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'groups';[0m
+  [1m[35m (0.8ms)[0m  [1m[31mDELETE FROM "groups_users";[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'groups_users';[0m
+  [1m[35m (0.8ms)[0m  [1m[31mDELETE FROM "replies";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'replies';[0m
+  [1m[35m (0.7ms)[0m  [1m[31mDELETE FROM "sendees";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'sendees';[0m
+  [1m[35m (0.7ms)[0m  [1m[31mDELETE FROM "sub_requests";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'sub_requests';[0m
+  [1m[35m (0.8ms)[0m  [1m[31mDELETE FROM "users";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'users';[0m
+  [1m[35m (0.8ms)[0m  [1m[31mDELETE FROM "ar_internal_metadata";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'ar_internal_metadata';[0m
+  [1m[35m (0.4ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:54.565964"], ["updated_at", "2018-01-26 23:36:54.565964"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:54.576514"], ["updated_at", "2018-01-26 23:36:54.576514"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.605067"], ["updated_at", "2018-01-26 23:36:54.605067"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.3ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.3ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.621476"], ["updated_at", "2018-01-26 23:36:54.621476"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:54.641750"], ["updated_at", "2018-01-26 23:36:54.641750"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.4ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:54.648170"], ["updated_at", "2018-01-26 23:36:54.648170"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:54.650894"], ["updated_at", "2018-01-26 23:36:54.650894"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.656673"], ["updated_at", "2018-01-26 23:36:54.656673"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.661430"], ["updated_at", "2018-01-26 23:36:54.661430"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:54.663910"], ["updated_at", "2018-01-26 23:36:54.663910"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:54.669070"], ["updated_at", "2018-01-26 23:36:54.669070"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:54.672570"], ["updated_at", "2018-01-26 23:36:54.672570"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.680940"], ["updated_at", "2018-01-26 23:36:54.680940"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.686916"], ["updated_at", "2018-01-26 23:36:54.686916"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:54.690222"], ["updated_at", "2018-01-26 23:36:54.690222"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:54.694957"], ["updated_at", "2018-01-26 23:36:54.694957"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:54.697195"], ["updated_at", "2018-01-26 23:36:54.697195"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.702013"], ["updated_at", "2018-01-26 23:36:54.702013"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:54.706328"], ["updated_at", "2018-01-26 23:36:54.706328"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.0ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:54.708982"], ["updated_at", "2018-01-26 23:36:54.708982"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.5ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:55.218309"], ["updated_at", "2018-01-26 23:36:55.218309"]]
+  [1m[35m (0.9ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:55.221959"], ["updated_at", "2018-01-26 23:36:55.221959"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.230257"], ["updated_at", "2018-01-26 23:36:55.230257"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.237969"], ["updated_at", "2018-01-26 23:36:55.237969"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.243999"], ["updated_at", "2018-01-26 23:36:55.243999"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.3ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.5ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.6ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:55.252923"], ["updated_at", "2018-01-26 23:36:55.252923"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:55.255791"], ["updated_at", "2018-01-26 23:36:55.255791"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.266073"], ["updated_at", "2018-01-26 23:36:55.266073"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.269955"], ["updated_at", "2018-01-26 23:36:55.269955"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.272799"], ["updated_at", "2018-01-26 23:36:55.272799"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:55.280011"], ["updated_at", "2018-01-26 23:36:55.280011"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:55.282698"], ["updated_at", "2018-01-26 23:36:55.282698"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.288585"], ["updated_at", "2018-01-26 23:36:55.288585"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.293175"], ["updated_at", "2018-01-26 23:36:55.293175"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.2ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.297951"], ["updated_at", "2018-01-26 23:36:55.297951"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.302695"], ["updated_at", "2018-01-26 23:36:55.302695"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 2], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.305347"], ["updated_at", "2018-01-26 23:36:55.305347"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.3ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.6ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:55.311562"], ["updated_at", "2018-01-26 23:36:55.311562"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:55.314371"], ["updated_at", "2018-01-26 23:36:55.314371"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.1ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.320702"], ["updated_at", "2018-01-26 23:36:55.320702"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.325648"], ["updated_at", "2018-01-26 23:36:55.325648"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.328416"], ["updated_at", "2018-01-26 23:36:55.328416"]]
+  [1m[35m (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "replies"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.2ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.335820"], ["updated_at", "2018-01-26 23:36:55.335820"]]
+  [1m[36mSendee Load (0.2ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 2], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.340469"], ["updated_at", "2018-01-26 23:36:55.340469"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "replies"[0m
+  [1m[36mReply Load (0.2ms)[0m  [1m[34mSELECT  "replies".* FROM "replies" ORDER BY "replies"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "users" ("staff_id_mb", "first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["staff_id_mb", 100000164], ["first_name", "Jennifer"], ["last_name", "Anderson"], ["created_at", "2018-01-26 23:36:55.347479"], ["updated_at", "2018-01-26 23:36:55.347479"]]
+  [1m[35m (0.3ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "groups" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Yoga"], ["created_at", "2018-01-26 23:36:55.351615"], ["updated_at", "2018-01-26 23:36:55.351615"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mGroup Load (0.2ms)[0m  [1m[34mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sub_requests" ("start_date_time", "end_date_time", "class_name", "class_id_mb", "note", "group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["start_date_time", "2018-02-01 17:36:49"], ["end_date_time", "2018-02-09 14:05:41"], ["class_name", "Vinyasa Yoga"], ["class_id_mb", 1000], ["note", "Please cover me"], ["group_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.359059"], ["updated_at", "2018-01-26 23:36:55.359059"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[35mSAVEPOINT active_record_2[0m
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "sendees" ("sub_request_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sub_request_id", 1], ["user_id", 1], ["created_at", "2018-01-26 23:36:55.363461"], ["updated_at", "2018-01-26 23:36:55.363461"]]
+  [1m[36mSendee Load (0.1ms)[0m  [1m[34mSELECT  "sendees".* FROM "sendees" WHERE "sendees"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSubRequest Load (0.1ms)[0m  [1m[34mSELECT  "sub_requests".* FROM "sub_requests" WHERE "sub_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "replies" ("sendee_id", "sub_request_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["sendee_id", 1], ["sub_request_id", 1], ["created_at", "2018-01-26 23:36:55.366261"], ["updated_at", "2018-01-26 23:36:55.366261"]]
+  [1m[35m (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_2[0m
+  [1m[35m (0.1ms)[0m  [1m[31mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35m (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (1.0ms)[0m  [1m[31mDELETE FROM "groups";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.4ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'groups';[0m
+  [1m[35m (0.8ms)[0m  [1m[31mDELETE FROM "groups_users";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'groups_users';[0m
+  [1m[35m (1.4ms)[0m  [1m[31mDELETE FROM "replies";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'replies';[0m
+  [1m[35m (1.2ms)[0m  [1m[31mDELETE FROM "sendees";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'sendees';[0m
+  [1m[35m (1.3ms)[0m  [1m[31mDELETE FROM "sub_requests";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'sub_requests';[0m
+  [1m[35m (0.8ms)[0m  [1m[31mDELETE FROM "users";[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.1ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'users';[0m
+  [1m[35m (1.2ms)[0m  [1m[31mDELETE FROM "ar_internal_metadata";[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';[0m
+  [1m[35m (0.3ms)[0m  [1m[31mDELETE FROM sqlite_sequence where name = 'ar_internal_metadata';[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m

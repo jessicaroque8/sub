@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 20180124191043) do
 
   create_table "groups", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20180124191043) do
   end
 
   create_table "replies", force: :cascade do |t|
-    t.integer "value", default: 0
+    t.integer "value", default: 0, null: false
     t.text "note"
     t.integer "sendee_id"
     t.integer "sub_request_id"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20180124191043) do
   end
 
   create_table "sub_requests", force: :cascade do |t|
-    t.datetime "start_date_time"
+    t.datetime "start_date_time", null: false
     t.datetime "end_date_time"
     t.string "class_name"
     t.integer "class_id_mb"
