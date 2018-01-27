@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180124191043) do
+ActiveRecord::Schema.define(version: 20180125212245) do
 
   create_table "groups", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20180124191043) do
   end
 
   create_table "replies", force: :cascade do |t|
-    t.integer "value", default: 0, null: false
+    t.integer "value", default: 0
     t.text "note"
     t.integer "sendee_id"
     t.integer "sub_request_id"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20180124191043) do
   end
 
   create_table "sub_requests", force: :cascade do |t|
-    t.datetime "start_date_time", null: false
+    t.datetime "start_date_time"
     t.datetime "end_date_time"
     t.string "class_name"
     t.integer "class_id_mb"
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(version: 20180124191043) do
     t.string "last_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email"
+    t.string "password_digest"
   end
 
 end

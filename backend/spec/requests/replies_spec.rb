@@ -1,21 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe 'Replies API', type: :request do
-   let(:my_user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey')}
+   let(:user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey', email: 'erin@email.com', password: 'abc123', password_confirmation: 'abc123')}
    let(:my_group) { Group.create(name: 'Yoga') }
 
    startdatetime = Faker::Time.forward(23, :morning)
    enddatetime = Faker::Time.forward(23, :morning)
-   let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
-   let!(:my_sendee) { Sendee.create(user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false) }
+   let!(:my_sub_request) { SubRequest.create(user_id: user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:my_sendee) { Sendee.create(user_id: user.id, sub_request_id: my_sub_request.id, sub: false) }
 
    let!(:my_reply) { my_sendee.reply }
 
    let(:url) { "/sub_requests/" + my_sub_request.id.to_s + "/sendees/" + my_sendee.id.to_s + '/replies/' + my_reply.id.to_s }
 
+   def authenticated_header
+      token = Knock::AuthToken.new(payload: { sub: user.id }).token
+      {
+        'Authorization': "Bearer #{token}"
+      }
+   end
+
    describe "GET /sub_requests/:sub_request_id/sendees/:sendee_id/replies/:id" do
       context "when the record exists" do
-         before { get '/sub_requests/1/sendees/1/replies/1' }
+         before { get '/sub_requests/1/sendees/1/replies/1', headers: authenticated_header }
 
          it "returns the reply" do
             expect(json).not_to be_empty
@@ -29,7 +36,7 @@ RSpec.describe 'Replies API', type: :request do
 
       context "when the record does not exist" do
          let(:bad_url) { "/sub_requests/1/sendees/1/replies/" + 0.to_s }
-         before { get bad_url }
+         before { get bad_url, headers: authenticated_header }
 
          it 'returns status code 404' do
             expect(response).to have_http_status(404)
@@ -46,17 +53,17 @@ RSpec.describe 'Replies API', type: :request do
       context 'when the request is valid' do
 
          it "increases the number of Reply by 1" do
-            expect { post "/sub_requests/1/sendees/1/replies", params: {sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree", note: 'Happy to sub this!' } }.to change(Reply,:count).by(1)
+            expect { post "/sub_requests/1/sendees/1/replies", params: {sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree", note: 'Happy to sub this!' }, headers: authenticated_header }.to change(Reply,:count).by(1)
          end
 
          it 'assigns the new reply to @reply' do
-            post "/sub_requests/1/sendees/1/replies", params: { sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree", note: 'Happy to sub this!' }
+            post "/sub_requests/1/sendees/1/replies", params: { sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree", note: 'Happy to sub this!' }, headers: authenticated_header
 
             expect(assigns(:reply)).to eq(Reply.last)
          end
 
          it 'returns status code 201' do
-            post "/sub_requests/1/sendees/1/replies", params: { sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree", note: 'Happy to sub this!' }
+            post "/sub_requests/1/sendees/1/replies", params: { sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree", note: 'Happy to sub this!' }, headers: authenticated_header
 
             expect(response).to have_http_status(201)
          end
@@ -65,7 +72,7 @@ RSpec.describe 'Replies API', type: :request do
 
    describe 'PUT /sub_requests/1/sendees/1' do
       context 'when the record exists' do
-         before { put '/sub_requests/1/sendees/1/replies/1', params: {sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree" } }
+         before { put '/sub_requests/1/sendees/1/replies/1', params: {sendee_id: my_sendee.id, sub_request_id: my_sub_request.id, value: "agree" }, headers: authenticated_header }
 
          it "updates the record" do
             updated_reply = assigns(:reply)
@@ -89,7 +96,7 @@ RSpec.describe 'Replies API', type: :request do
    describe 'DELETE /sub_requests/1/sendees/1/replies/1' do
 
       context 'when the record exists' do
-         before { delete '/sub_requests/1/sendees/1/replies/1' }
+         before { delete '/sub_requests/1/sendees/1/replies/1', headers: authenticated_header }
 
          it 'returns status code 204' do
             expect(response).to have_http_status(204)
