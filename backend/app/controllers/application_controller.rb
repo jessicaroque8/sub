@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::API
-   include Knock::Authenticable
+  include DeviseTokenAuth::Concerns::SetUserByToken
 end

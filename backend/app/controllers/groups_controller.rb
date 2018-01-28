@@ -2,8 +2,7 @@ class GroupsController < ApplicationController
 
    include Response
    include ExceptionHandler
-   
-   before_action :authenticate_user
+
    before_action :set_group, only: [:show, :update, :destroy]
    def index
       @groups = Group.all

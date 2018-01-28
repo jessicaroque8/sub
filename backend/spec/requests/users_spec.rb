@@ -13,7 +13,7 @@ RSpec.describe 'Users API', type: :request do
    end
 
    describe "GET /users" do
-      before { get '/users', headers: authenticated_header }
+      before { get '/users' }
 
       it "returns users" do
          expect(json).not_to be_empty
@@ -27,7 +27,7 @@ RSpec.describe 'Users API', type: :request do
 
    describe "GET /users/:id" do
       context "when the record exists" do
-         before { get url, headers: authenticated_header }
+         before { get url }
 
          it "returns the user" do
             expect(json).not_to be_empty
@@ -41,7 +41,7 @@ RSpec.describe 'Users API', type: :request do
 
       context "when the record does not exist" do
          bad_url = '/users/' + 0.to_s
-         before { get bad_url, headers: authenticated_header }
+         before { get bad_url }
 
          it 'returns status code 404' do
             expect(response).to have_http_status(404)
@@ -59,7 +59,7 @@ RSpec.describe 'Users API', type: :request do
       invalid_attributes = { first_name: 'Kali', last_name: 'Shakti' }
 
       context 'when the request is valid' do
-         before { post '/users', params: valid_attributes, headers: authenticated_header }
+         before { post '/users', params: valid_attributes }
 
          it 'retrieves from the MINDBODY API the user data' do
             expect(assigns(:mb_data)).not_to be_nil
@@ -81,7 +81,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       context 'when the request is invalid' do
-         before { post '/users', params: invalid_attributes, headers: authenticated_header }
+         before { post '/users', params: invalid_attributes }
 
          it 'returns status code 422' do
             expect(response).to have_http_status(422)
@@ -97,7 +97,7 @@ RSpec.describe 'Users API', type: :request do
       valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey-Bean' }
 
       context 'when the record exists' do
-         before { put url, params: valid_attributes, headers: authenticated_header }
+         before { put url, params: valid_attributes }
 
          it 'updates the record' do
             expect(response.body).to be_empty
@@ -113,7 +113,7 @@ RSpec.describe 'Users API', type: :request do
       valid_attributes = { staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey' }
 
       context 'when the record exists' do
-         before { delete url, headers: authenticated_header }
+         before { delete url }
 
          it 'returns status code 204' do
             expect(response).to have_http_status(204)

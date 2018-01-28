@@ -3,7 +3,6 @@ class SendeesController < ApplicationController
    include Response
    include ExceptionHandler
 
-   before_action :authenticate_user
    before_action :set_sendee, only: [:show, :update, :destroy]
 
   def create

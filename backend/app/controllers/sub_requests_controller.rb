@@ -5,7 +5,6 @@ class SubRequestsController < ApplicationController
    include Response
    include ExceptionHandler
 
-   before_action :authenticate_user
    before_action :set_sub_request, only: [:show, :update, :destroy]
 
    def index

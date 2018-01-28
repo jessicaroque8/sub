@@ -23,7 +23,7 @@ RSpec.describe 'Sendees API', type: :request do
 
    describe "GET /sub_requests/:sub_request_id/sendee/:id" do
       context "when the record exists" do
-         before { get url, headers: authenticated_header }
+         before { get url }
 
          it "returns the sendee" do
             expect(json).not_to be_empty
@@ -37,7 +37,7 @@ RSpec.describe 'Sendees API', type: :request do
 
       context "when the record does not exist" do
          let(:bad_url) { "/sub_requests/" + my_sub_request_id.to_s + "/sendees/" + 0.to_s }
-         before { get bad_url, headers: authenticated_header }
+         before { get bad_url }
 
          it 'returns status code 404' do
             expect(response).to have_http_status(404)
@@ -54,17 +54,17 @@ RSpec.describe 'Sendees API', type: :request do
       context 'when the request is valid' do
 
          it "increases the number of Sendee by 1" do
-            expect { post "/sub_requests/1/sendees/", params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }, headers: authenticated_header }.to change(Sendee,:count).by(1)
+            expect { post "/sub_requests/1/sendees/", params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false } }.to change(Sendee,:count).by(1)
          end
 
          it 'assigns the new sendee to @sendee' do
-            post "/sub_requests/1/sendees/", params: { user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }, headers: authenticated_header
+            post "/sub_requests/1/sendees/", params: { user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }
 
             expect(assigns(:sendee)).to eq(Sendee.last)
          end
 
          it 'returns status code 201' do
-            post "/sub_requests/1/sendees/", params: { user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }, headers: authenticated_header
+            post "/sub_requests/1/sendees/", params: { user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false }
 
             expect(response).to have_http_status(201)
          end
@@ -73,12 +73,12 @@ RSpec.describe 'Sendees API', type: :request do
       context 'when the request is invalid' do
 
          it 'returns status code 422' do
-            post "/sub_requests/1/sendees/", params: { sub_request_id: my_sub_request.id, sub: false }, headers: authenticated_header
+            post "/sub_requests/1/sendees/", params: { sub_request_id: my_sub_request.id, sub: false }
             expect(response).to have_http_status(422)
          end
 
          it 'returns a validation failure message' do
-            post "/sub_requests/1/sendees/", params: { sub_request_id: my_sub_request.id, sub: false }, headers: authenticated_header
+            post "/sub_requests/1/sendees/", params: { sub_request_id: my_sub_request.id, sub: false }
             expect(response.body).to match(/Validation failed: User must exist/)
          end
       end
@@ -86,10 +86,10 @@ RSpec.describe 'Sendees API', type: :request do
 
    describe 'PUT /sub_requests/1/sendees/1' do
       context 'when the record exists' do
-         before { put '/sub_requests/1/sendees/1', params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true }, headers: authenticated_header }
+         before { put '/sub_requests/1/sendees/1', params: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
 
          it "updates the record" do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }, headers: authenticated_header
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
 
             updated_sendee = assigns(:sendee)
 
@@ -100,12 +100,12 @@ RSpec.describe 'Sendees API', type: :request do
          end
 
          it 'returns an empty body' do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }, headers: authenticated_header
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
             expect(response.body).to be_empty
          end
 
          it 'returns status code 204' do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }, headers: authenticated_header
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
             expect(response).to have_http_status(204)
          end
       end
@@ -115,7 +115,7 @@ RSpec.describe 'Sendees API', type: :request do
          let(:before_confirmed) { my_sendee.confirmed}
 
          it 'sets @sendee.confirmed as false' do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }, headers: authenticated_header
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
             my_sendee.reload
 
             after_sub = my_sendee.sub
@@ -129,13 +129,13 @@ RSpec.describe 'Sendees API', type: :request do
       end
 
       context "if removing @sendee as the sub" do
-         before { put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }, headers: authenticated_header
+         before { put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: true } }
 }
          let(:before_sub) { my_sendee.sub }
          let(:before_confirmed) { my_sendee.confirmed }
 
          it 'sets @sendee.confirmed as nil' do
-            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false } }, headers: authenticated_header
+            put '/sub_requests/1/sendees/1', params: { id: my_sendee.id, sendee: {user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false } }
             my_sendee.reload
 
             after_sub = my_sendee.sub
@@ -152,7 +152,7 @@ RSpec.describe 'Sendees API', type: :request do
    describe 'DELETE /sub_requests/1/sendees/1' do
 
       context 'when the record exists' do
-         before { delete '/sub_requests/1/sendees/1', headers: authenticated_header }
+         before { delete '/sub_requests/1/sendees/1' }
 
          it 'returns status code 204' do
             expect(response).to have_http_status(204)

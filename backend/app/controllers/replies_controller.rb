@@ -3,7 +3,6 @@ class RepliesController < ApplicationController
    include Response
    include ExceptionHandler
 
-   before_action :authenticate_user
    before_action :set_reply, only: [:show, :update, :destroy]
 
   def create

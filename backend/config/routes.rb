@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
 
    resources :groups
    resources :users
@@ -9,6 +10,5 @@ Rails.application.routes.draw do
       end
    end
    post '/search_classes' => 'sub_requests#search_classes', as: :search_classes
-   post 'user_token' => 'user_token#create'
 
 end

@@ -8,9 +8,9 @@
 require 'random_data'
 
 
-User.create!(staff_id_mb: 100000285, first_name: 'Ken', last_name: 'Berry', password: 'bananaking', password_confirmation: 'bananaking')
-User.create!(staff_id_mb: 100000164, first_name: 'Jennifer', last_name: 'Anderson', password: 'bananaqueen', password_confirmation: 'bananaqueen')
-User.create!(staff_id_mb: 100000270, first_name: 'Johnny', last_name: 'Salke', password: 'bananaland', password_confirmation: 'bananaland')
+User.create!(staff_id_mb: 100000285, first_name: 'Ken', last_name: 'Berry', email: 'ken@email.com', password: 'hanuman8')
+User.create!(staff_id_mb: 100000164, first_name: 'Jennifer', last_name: 'Anderson', email: 'jennifer@email.com', password: 'saraswati8')
+User.create!(staff_id_mb: 100000270, first_name: 'Johnny', last_name: 'Salke', email: 'johnny@email.com', password: 'prajaprati')
 users = User.all
 
 Group.create!(name: 'Yoga')
