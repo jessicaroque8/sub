@@ -24,7 +24,6 @@ class UsersController < ApplicationController
          last_name: @mb_data['last_name'],
          email: params[:email],
          password: params[:password],
-         password_confirmation: params[:password_confirmation]
       )
       json_response(@user, :created)
    end
@@ -50,7 +49,7 @@ class UsersController < ApplicationController
    end
 
    def user_params
-      params.permit(:staff_id_mb, :first_name, :last_name, :email, :password, :password_confirmation)
+      params.permit(:staff_id_mb, :first_name, :last_name, :email, :password)
    end
 
    def set_user

@@ -2,32 +2,103 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe 'SubRequests API', type: :request do
-   let(:my_user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey', email: 'erin@email.com', password: 'abc123', password_confirmation: 'abc123')}
+   let(:my_user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey', email: 'erin@email.com', password: 'abc123456', password_confirmation: 'abc123456')}
+   let(:other_user) { User.create(staff_id_mb: 100000216, first_name: 'Jennifer', last_name: 'Anderson', email: 'jennifer@email.com', password: 'abc123456', password_confirmation: 'abc123456')}
+
    let(:my_group) { Group.create(name: 'Yoga') }
 
    startdatetime = DateTime.new(2018, 01, 27, 07, 00, 00)
    enddatetime = DateTime.new(2018, 01, 27, 07, 45, 00)
-   let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
-   let(:url) { '/sub_requests/' + my_sub_request.id.to_s }
 
-   def authenticated_header
-      token = Knock::AuthToken.new(payload: { sub: my_user.id }).token
-      {
-        'Authorization': "Bearer #{token}"
-      }
-   end
+# For scope: incomplete
+   startdatetime_ic = DateTime.new(2018, 05, 27, 07, 00, 00)
+   enddatetime_ic = DateTime.new(2018, 05, 27, 07, 45, 00)
+   let!(:my_sub_request_i) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime_ic, end_date_time: enddatetime_ic, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:my_sendee_i) { Sendee.create(user_id: other_user.id, sub_request_id: my_sub_request_i.id, sub: false, confirmed: false) }
+
+   let!(:other_sub_request_i) { SubRequest.create(user_id: other_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime_ic, end_date_time: enddatetime_ic, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:other_sendee_i) { Sendee.create(user_id: my_user.id, sub_request_id: other_sub_request_i.id, sub: false, confirmed: false) }
+
+# For scope: complete
+   let!(:my_sub_request_c) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime_ic, end_date_time: enddatetime_ic, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:my_sendee_c) { Sendee.create(user_id: other_user.id, sub_request_id: my_sub_request_c.id, sub: true, confirmed: true) }
+
+   let!(:other_sub_request_c) { SubRequest.create(user_id: other_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime_ic, end_date_time: enddatetime_ic, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:other_sendee_c) { Sendee.create(user_id: my_user.id, sub_request_id: other_sub_request_c.id, sub: true, confirmed: true) }
+
+   startdatetime_p = 3.days.ago
+   enddatetime_p = 3.days.ago
+   let!(:my_sub_request_p) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime_p, end_date_time: enddatetime_p, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:my_sendee_p) { Sendee.create(user_id: other_user.id, sub_request_id: my_sub_request_p.id, sub: true, confirmed: true) }
+
+   let!(:other_sub_request_p) { SubRequest.create(user_id: other_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime_p, end_date_time: enddatetime_p, class_name: 'Bikram Yoga', note: 'Please sub me!') }
+   let!(:other_sendee_p) { Sendee.create(user_id: my_user.id, sub_request_id: other_sub_request_p.id, sub: true, confirmed: true) }
+
+
+   let(:url) { '/sub_requests/' + my_sub_request.id.to_s }
+   let(:auth_headers) { my_user.create_new_auth_token }
 
    describe "GET /sub_requests" do
-      before { get '/sub_requests' }
 
-      it "returns sub requests" do
-         expect(json).not_to be_empty
-         expect(json.size).to eq(1)
+      context "scope: incomplete" do
+         before { get '/sub_requests', headers: auth_headers, params: {scope: "incomplete"} }
+
+         it "returns the incomplete sub requests: sent by user" do
+            puts json
+            expect(json['sent']['0']['id']).to eq(my_sub_request_i.id)
+            expect(json['sent']['0']['user_id']).to eq(my_user.id)
+         end
+
+         it "returns the incomplete sub requests: sent to user by other users" do
+            expect(json['incoming']['0']['id']).to eq(other_sub_request_i.id)
+            expect(json['incoming']['0']['user_id']).to eq(other_user.id)
+         end
+
+         it 'returns status code 200' do
+            expect(response).to have_http_status(200)
+         end
       end
 
-      it 'returns status code 200' do
-         expect(response).to have_http_status(200)
+      context "scope: complete" do
+         before { get '/sub_requests', headers: auth_headers, params: {scope: "complete"} }
+
+         it "returns the complete sub requests: sent by user" do
+            puts json
+            expect(json['sent']['0']['id']).to eq(my_sub_request_c.id)
+            expect(json['sent']['0']['user_id']).to eq(my_user.id)
+         end
+
+         it "returns the complete sub requests: sent to user by other users" do
+            expect(json['incoming']['0']['id']).to eq(other_sub_request_c.id)
+            expect(json['incoming']['0']['user_id']).to eq(other_user.id)
+         end
+
+         it 'returns status code 200' do
+            expect(response).to have_http_status(200)
+         end
       end
+
+      context "scope: past" do
+         before { get '/sub_requests', headers: auth_headers, params: {scope: "past"} }
+
+            it "returns the past sub requests: sent by user" do
+               puts json
+               expect(json['sent']['0']['id']).to eq(my_sub_request_p.id)
+               expect(json['sent']['0']['user_id']).to eq(my_user.id)
+            end
+
+            it "returns the past sub requests: sent to user by other users" do
+               expect(json['incoming']['0']['id']).to eq(other_sub_request_p.id)
+               expect(json['incoming']['0']['user_id']).to eq(other_user.id)
+            end
+
+            it 'returns status code 200' do
+               expect(response).to have_http_status(200)
+            end
+      end
+
+
+
    end
 
    describe "GET /sub_requests/:id" do

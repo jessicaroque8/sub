@@ -13,4 +13,13 @@ class User < ApplicationRecord
 
   validates_presence_of :first_name, :last_name, :email
 
+  before_validation :set_provider
+
+  private
+
+      def set_provider
+        self.provider = "email"
+      end
+
+
 end
