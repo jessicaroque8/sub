@@ -32,11 +32,11 @@ sub_requests = SubRequest.all
 
 # Open
 a_sendee = Sendee.create!(user: jennifer, sub_request: a, sub: false)
-b_sendee = Sendee.create!(user: johnny, sub_request: b, sub: true, confirmed: false)
+b_sendee = Sendee.create!(user: johnny, sub_request: b, sub: false, confirmed: false)
 
 # Closed
-d_sendee = Sendee.create!(user: johnny, sub_request: e, sub: true, confirmed: true)
-f_sendee = Sendee.create!(user: jennifer, sub_request: f, sub: true, confirmed: true)
+d_sendee = Sendee.create!(user: johnny, sub_request: e, sub: false, confirmed: false)
+f_sendee = Sendee.create!(user: jennifer, sub_request: f, sub: false, confirmed: false)
 
 sendees = Sendee.all
 
