@@ -1,39 +1,47 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 require 'random_data'
 
 
-User.create!(staff_id_mb: 100000285, first_name: 'Ken', last_name: 'Berry', email: 'ken@email.com', password: 'hanuman8')
-User.create!(staff_id_mb: 100000164, first_name: 'Jennifer', last_name: 'Anderson', email: 'jennifer@email.com', password: 'saraswati8')
-User.create!(staff_id_mb: 100000270, first_name: 'Johnny', last_name: 'Salke', email: 'johnny@email.com', password: 'prajaprati')
+ken = User.create!(staff_id_mb: 100000285, first_name: 'Ken', last_name: 'Berry', email: 'ken@email.com', password: 'hanuman8', image: 'https://thumb.ibb.co/i0aF66/image_1.png')
+jennifer = User.create!(staff_id_mb: 100000164, first_name: 'Jennifer', last_name: 'Anderson', email: 'jennifer@email.com', password: 'saraswati8', image: 'https://image.ibb.co/cMrBeR/image_2.png')
+johnny = User.create!(staff_id_mb: 100000270, first_name: 'Johnny', last_name: 'Salke', email: 'johnny@email.com', password: 'prajaprati', image: 'https://thumb.ibb.co/nGmcKR/image_3.png')
+
 users = User.all
 
-Group.create!(name: 'Yoga')
-Group.create!(name: 'Fitness')
-Group.create!(name: 'Yoga Assist')
-Group.create!(name: 'Fitness Assist')
+yoga = Group.create!(name: 'Yoga')
+fitness = Group.create!(name: 'Fitness')
+yoga_assist = Group.create!(name: 'Yoga Assist')
+fitness_assist = Group.create!(name: 'Fitness Assist')
 groups = Group.all
 
 users.each do |user|
    user.groups << groups.sample
 end
 
-SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 1111, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
-SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 2222, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
-SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 3333, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
-SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 4444, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
-SubRequest.create!(user: users.sample, group: groups.sample, class_id_mb: 5555, start_date_time: RandomData.datetime(3.days.ago), end_date_time: RandomData.datetime(3.days.ago), class_name: RandomData.word, note: RandomData.sentence)
+# Open
+a = SubRequest.create!(user: johnny, group: yoga, class_id_mb: 5555, start_date_time: DateTime.new(2018, 03, 01, 8, 00, 00), end_date_time: DateTime.new(2018, 03, 01, 9, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+b = SubRequest.create!(user: jennifer, group: fitness, class_id_mb: 00000, start_date_time: DateTime.new(2018, 02, 9, 10, 00, 00), end_date_time: DateTime.new(2018, 02, 9, 11, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+c = SubRequest.create!(user: jennifer, group: yoga, class_id_mb: 77777, start_date_time: DateTime.new(2018, 02, 10, 11, 00, 00), end_date_time: DateTime.new(2018, 02, 10, 12, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+
+# Closed
+d = SubRequest.create!(user: jennifer, group: fitness, class_id_mb: 11111, start_date_time: DateTime.new(2018, 05, 10, 8, 00, 00), end_date_time: DateTime.new(2018, 05, 10, 9, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+e = SubRequest.create!(user: jennifer, group: yoga, class_id_mb: 22222, start_date_time: DateTime.new(2018, 05, 10, 13, 00, 00), end_date_time: DateTime.new(2018, 05, 10, 14, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+f = SubRequest.create!(user: johnny, group: fitness_assist, class_id_mb: 55552, start_date_time: DateTime.new(2018, 05, 01, 18, 00, 00), end_date_time: DateTime.new(2018, 05, 01, 19, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+
+
 sub_requests = SubRequest.all
 
-10.times do
-   Sendee.create!(user: users.sample, sub_request: sub_requests.sample, sub: false)
-end
+# Open
+a_sendee = Sendee.create!(user: jennifer, sub_request: a, sub: false)
+b_sendee = Sendee.create!(user: johnny, sub_request: b, sub: true, confirmed: false)
+
+# Closed
+d_sendee = Sendee.create!(user: johnny, sub_request: e, sub: true, confirmed: true)
+f_sendee = Sendee.create!(user: jennifer, sub_request: f, sub: true, confirmed: true)
+
 sendees = Sendee.all
+
+
+
 
 puts "Seeds finished"
 puts "#{User.count} users created"

@@ -5,6 +5,11 @@ class SendeesController < ApplicationController
 
    before_action :set_sendee, only: [:show, :update, :destroy]
 
+   def index
+      @sendees = Sendee.where(sub_request_id: params[:sub_request_id])
+      json_response(@sendees)
+   end
+
   def create
      @sendee = Sendee.create!(sendee_params)
      json_response(@sendee, :created)

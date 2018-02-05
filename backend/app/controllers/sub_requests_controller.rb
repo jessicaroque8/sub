@@ -9,9 +9,8 @@ class SubRequestsController < ApplicationController
 
    def index
       if params[:scope] == "incomplete"
-         user_requests = SubRequest.where('user_id = ? AND start_date_time >= ?', current_user.id, Time.now.to_date)
-         @sent_sub_requests = {}
-         sent_count = 0
+         user_requests = SubRequest.where('user_id = ? AND start_date_time >= ?', params[:user_id].to_i, Time.now.to_date)
+         @sent_sub_requests = []
             user_requests.each do |request|
                complete = false
                request.sendees.each do |sendee|
@@ -21,14 +20,12 @@ class SubRequestsController < ApplicationController
                end
 
                if complete == false
-                  count += 1
-                  @sent_sub_requests[sent_count] = request
+                  @sent_sub_requests << request
                end
             end
 
-         other_requests = SubRequest.where('start_date_time >= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', current_user.id)
-         @incoming_sub_requests = {}
-         incoming_count = 0
+         other_requests = SubRequest.where('start_date_time >= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', params[:user_id])
+         @incoming_sub_requests = []
          other_requests.each do |request|
             complete = false
             request.sendees.each do |sendee|
@@ -38,15 +35,14 @@ class SubRequestsController < ApplicationController
             end
 
             if complete == false
-               @incoming_sub_requests[incoming_count] = request
+               @incoming_sub_requests << request
             end
          end
 
          json_response({ :sent => @sent_sub_requests, :incoming => @incoming_sub_requests})
       elsif params[:scope] == "complete"
-         user_requests = SubRequest.where('user_id = ? AND start_date_time >= ?', current_user.id, Time.now.to_date)
-         @sent_sub_requests = {}
-         sent_count = 0
+         user_requests = SubRequest.where('user_id = ? AND start_date_time >= ?', params[:user_id].to_i, Time.now.to_date)
+         @sent_sub_requests = []
 
             user_requests.each do |request|
                complete = false
@@ -57,13 +53,12 @@ class SubRequestsController < ApplicationController
                end
 
                if complete == true
-                  @sent_sub_requests[sent_count] = request
+                  @sent_sub_requests << request
                end
             end
 
-         other_requests = SubRequest.where('start_date_time >= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', current_user.id)
-         @incoming_sub_requests = {}
-         incoming_count = 0
+         other_requests = SubRequest.where('start_date_time >= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', params[:user_id].to_i)
+         @incoming_sub_requests = []
 
          other_requests.each do |request|
             complete = false
@@ -74,20 +69,20 @@ class SubRequestsController < ApplicationController
             end
 
             if complete == true
-               @incoming_sub_requests[incoming_count] = request
+               @incoming_sub_requests << request
             end
          end
 
          json_response({ :sent => @sent_sub_requests, :incoming => @incoming_sub_requests})
       elsif params[:scope] == "past"
-         sent_requests = SubRequest.where('user_id = ? AND start_date_time <= ?', current_user.id, Time.now.to_date)
-         @sent_sub_requests = {}
-         sent_requests.each_with_index { |s, i| @sent_sub_requests[i] = s }
+         sent_requests = SubRequest.where('user_id = ? AND start_date_time <= ?', params[:user_id].to_i, Time.now.to_date)
+         @sent_sub_requests = []
+         sent_requests.each { |s| @sent_sub_requests << s }
 
-         incoming_requests = SubRequest.where('start_date_time <= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', current_user.id)
-         @incoming_sub_requests = {}
-         incoming_requests.each_with_index { |s, i| @incoming_sub_requests[i] = s }
-         
+         incoming_requests = SubRequest.where('start_date_time <= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', params[:user_id].to_i)
+         @incoming_sub_requests = []
+         incoming_requests.each { |s| @incoming_sub_requests << s }
+
          json_response({ :sent => @sent_sub_requests, :incoming => @incoming_sub_requests})
       end
    end
