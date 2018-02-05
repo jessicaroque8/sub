@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Replies API', type: :request do
+RSpec.describe 'Reply API', type: :request do
    let(:user) { User.create(staff_id_mb: 100000315, first_name: 'Erin', last_name: 'Coffey', email: 'erin@email.com', password: 'abc123', password_confirmation: 'abc123')}
    let(:my_group) { Group.create(name: 'Yoga') }
 
@@ -13,9 +13,9 @@ RSpec.describe 'Replies API', type: :request do
 
    let(:url) { "/sub_requests/" + my_sub_request.id.to_s + "/sendees/" + my_sendee.id.to_s + '/replies/' + my_reply.id.to_s }
 
-   describe "GET /sub_requests/:sub_request_id/sendees/:sendee_id/replies/:id" do
+   describe "GET /sub_requests/:sub_request_id/sendees/:sendee_id/reply" do
       context "when the record exists" do
-         before { get '/sub_requests/1/sendees/1/replies/1' }
+         before { get '/sub_requests/1/sendees/1/reply' }
 
          it "returns the reply" do
             expect(json).not_to be_empty
@@ -24,19 +24,6 @@ RSpec.describe 'Replies API', type: :request do
 
          it 'returns status code 200' do
             expect(response).to have_http_status(200)
-         end
-      end
-
-      context "when the record does not exist" do
-         let(:bad_url) { "/sub_requests/1/sendees/1/replies/" + 0.to_s }
-         before { get bad_url }
-
-         it 'returns status code 404' do
-            expect(response).to have_http_status(404)
-         end
-
-         it 'returns a not found message' do
-            expect(response.body).to match (/Couldn't find Reply with 'id'=0/)
          end
       end
    end
