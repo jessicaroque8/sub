@@ -7,22 +7,22 @@ RSpec.describe 'Sendees API', type: :request do
    startdatetime = Faker::Time.forward(23, :morning)
    enddatetime = Faker::Time.forward(23, :morning)
    let!(:my_sub_request) { SubRequest.create(user_id: my_user.id, group_id: my_group.id, class_id_mb: 2342, start_date_time: startdatetime, end_date_time: enddatetime, class_name: 'Bikram Yoga', note: 'Please sub me!') }
-   let(:my_sub_request_id) { my_sub_request.id }
+   let(:my_sub_request_id) { my_sub_request.id.to_s}
 
    let!(:my_sendee) { Sendee.create(user_id: my_user.id, sub_request_id: my_sub_request.id, sub: false) }
-   let(:my_sendee_id) { my_sendee.id }
+   let(:my_sendee_id) { my_sendee.id.to_s }
 
-   let(:url) { "/sub_requests/" + my_sub_request.id + "/sendees/" + my_sendee.id }
+   let(:url) { '/sub_requests/' + my_sub_request_id + '/sendees/' + my_sendee_id }
 
 
-   describe "GET /sub_requests/:sub_request_id/sendees/" do
-      before { get "/sub_requests/" + my_sub_request_id.to_s + "/sendees/" }
-
-      it "returns all the sendees" do
-         expect(json).not_to be_empty
-         expect(json.size).to eq(1)
-      end
-   end
+   # describe "GET /sub_requests/:sub_request_id/sendees/" do
+   #    before { get "/sub_requests/" + my_sub_request_id + "/sendees/" }
+   #
+   #    it "returns all the sendees" do
+   #       expect(json).not_to be_empty
+   #       expect(json.size).to eq(1)
+   #    end
+   # end
 
    describe "GET /sub_requests/:sub_request_id/sendee/:id" do
       context "when the record exists" do
@@ -51,7 +51,7 @@ RSpec.describe 'Sendees API', type: :request do
          end
       end
    end
-#
+
 #    describe 'POST /sub_requests/:sub_request_id/sendees' do
 #
 #       context 'when the request is valid' do

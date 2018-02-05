@@ -5,13 +5,6 @@ RSpec.describe 'Users API', type: :request do
    let(:my_user_id) { my_user.id }
    let(:url) { '/users/' + my_user_id.to_s }
 
-   def authenticated_header
-      token = Knock::AuthToken.new(payload: { sub: my_user.id }).token
-      {
-        'Authorization': "Bearer #{token}"
-      }
-   end
-
    describe "GET /users" do
       before { get '/users' }
 

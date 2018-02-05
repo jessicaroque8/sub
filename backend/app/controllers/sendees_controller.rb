@@ -16,6 +16,7 @@ class SendeesController < ApplicationController
   end
 
   def show
+     byebug
      json_response(@sendee)
   end
 
@@ -31,9 +32,17 @@ class SendeesController < ApplicationController
      if before_sub_val == false && after_sub_val == true
         @sendee.confirmed = false
         @sendee.save!
+
+        @sendee.sub_request.awaiting_confirm = true
+        @sendee.sub_request.save!
      elsif before_sub_val == true && after_sub_val == false
         @sendee.confirmed = nil
         @sendee.save!
+        @sendee.sub_request.awaiting_confirm = false
+        @sendee.sub_request.save!
+     elsif before_sub_val == true && after_confirmed_val == true
+        @sendee.sub_request.closed = true
+        @sendee.sub_request.save!
      end
 
      head :no_content

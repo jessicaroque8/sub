@@ -13,13 +13,6 @@ RSpec.describe 'Replies API', type: :request do
 
    let(:url) { "/sub_requests/" + my_sub_request.id.to_s + "/sendees/" + my_sendee.id.to_s + '/replies/' + my_reply.id.to_s }
 
-   def authenticated_header
-      token = Knock::AuthToken.new(payload: { sub: user.id }).token
-      {
-        'Authorization': "Bearer #{token}"
-      }
-   end
-
    describe "GET /sub_requests/:sub_request_id/sendees/:sendee_id/replies/:id" do
       context "when the record exists" do
          before { get '/sub_requests/1/sendees/1/replies/1' }
