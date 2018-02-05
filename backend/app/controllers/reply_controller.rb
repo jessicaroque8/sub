@@ -1,17 +1,18 @@
-class RepliesController < ApplicationController
+class ReplyController < ApplicationController
 
    include Response
    include ExceptionHandler
 
-   before_action :set_reply, only: [:show, :update, :destroy]
+   before_action :set_reply, only: [:update, :destroy]
+
+
+   def index
+      @reply = Reply.where('sub_request_id = ? AND sendee_id = ?', params[:sub_request_id], params[:sendee_id])
+   end
 
   def create
      @reply = Reply.create!(reply_params)
      json_response(@reply, :created)
-  end
-
-  def show
-     json_response(@reply)
   end
 
   def update
