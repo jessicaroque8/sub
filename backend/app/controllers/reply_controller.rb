@@ -8,6 +8,7 @@ class ReplyController < ApplicationController
 
    def index
       @reply = Reply.where('sub_request_id = ? AND sendee_id = ?', params[:sub_request_id], params[:sendee_id])
+      json_response(@reply)
    end
 
   def create
