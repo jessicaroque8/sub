@@ -93,7 +93,7 @@ class SubRequestsController < ApplicationController
    end
 
    def show
-      json_response(@sub_request)
+      render json: @sub_request
    end
 
    def update
