@@ -13,15 +13,10 @@ class UsersController < ApplicationController
    end
 
    def create
-      # Instantiate the MindBodyAPI service
-      mb = MindBodyAPI.new
-      # Return a hash of MINDBODY's data for the user
-      @mb_data = mb.get_single_staff(params[:mb_username], params[:mb_password], params[:mb_siteids], params[:first_name], params[:last_name])
-      byebug
       @user = User.create!(
-         staff_id_mb: @mb_data['id'],
-         first_name: @mb_data['first_name'],
-         last_name: @mb_data['last_name'],
+         staff_id_mb: params[:mb_id],
+         first_name: params[:first_name],
+         last_name: params[:last_name],
          email: params[:email],
          password: params[:password],
       )
@@ -42,6 +37,21 @@ class UsersController < ApplicationController
       head :no_content
    end
 
+   def link_to_mb
+      @mbData = link_to_mb_params
+      mb = MindBodyAPI.new
+      # Return a hash of MINDBODY's data for the user
+      @output_data = mb.get_single_staff(
+         @mbData['email'],
+         @mbData['password'],
+         @mbData['siteids'],
+         @mbData['first_name'],
+         @mbData['last_name']
+      )
+
+      json_response(@output_data)
+   end
+
    private
 
    def mb_source_credentials
@@ -54,6 +64,10 @@ class UsersController < ApplicationController
 
    def set_user
       @user = User.find(params[:id])
+   end
+
+   def link_to_mb_params
+      params.require(:mbData).permit(:email, :password, :siteids, :first_name, :last_name)
    end
 
 end
