@@ -1,6 +1,4 @@
 DeviseTokenAuth.setup do |config|
-   config.default_confirm_success_url = "https://localhost:8100/ionic-lab/#/link-mind-body"
-
   # By default the authorization headers will change after each request. The
   # client is responsible for keeping track of the changing tokens. Change
   # this to false to prevent the Authorization header from changing after

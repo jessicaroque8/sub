@@ -17,6 +17,7 @@ class MindBodyAPI
             single_staff['id'] = staff['id']
             single_staff['first_name'] = staff['first_name']
             single_staff['last_name'] = staff['last_name']
+            single_staff['image'] = staff['image_url']
          end
       end
       single_staff

@@ -40,15 +40,15 @@ class UsersController < ApplicationController
    def link_to_mb
       @mbData = link_to_mb_params
       mb = MindBodyAPI.new
-      # Return a hash of MINDBODY's data for the user
       @output_data = mb.get_single_staff(
          @mbData['email'],
          @mbData['password'],
          @mbData['siteids'],
          @mbData['first_name'],
-         @mbData['last_name']
+         @mbData['last_name'],
       )
 
+# Returns staff_id_mb, first_name, last_name, image
       json_response(@output_data)
    end
 
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
    end
 
    def user_params
-      params.permit(:staff_id_mb, :first_name, :last_name, :email, :password)
+      params.permit(:staff_id_mb, :first_name, :last_name, :email, :password, :image)
    end
 
    def set_user

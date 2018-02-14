@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :replies, through: :sendees
 
   validates_presence_of :first_name, :last_name, :email
+  validates_uniqueness_of :staff_id_mb
 
   before_validation :set_provider
 
