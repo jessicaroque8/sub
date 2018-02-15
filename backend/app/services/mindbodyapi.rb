@@ -34,7 +34,6 @@ class MindBodyAPI
          # 		:end_date_time: DateTime.new(2018, 02, 02, 07, 45, 00)
          # }
    def get_staff_classes(filters)
-      puts filters
       response = MindBody::Services::ClassService.get_classes(
          'StaffIDs' =>
             {'ids' => filters[:staff_id_mb].to_i},
@@ -44,11 +43,11 @@ class MindBodyAPI
             truncate_datetime(filters[:end_date_time]),
       )
       classes = response.result.first[1]
-      staff_classes = {}
+      staff_classes = []
 
-      count = 0
       classes.each do |c|
          if c['staff']['id'].to_i == filters[:staff_id_mb].to_i
+            byebug
             if c['start_date_time'].to_date == filters[:start_date_time].to_date
                class_data = {}
                class_data['class_id_mb'] = c['id']
@@ -58,8 +57,7 @@ class MindBodyAPI
                class_data['start_date_time'] = c['start_date_time']
                class_data['end_date_time'] = c['end_date_time']
 
-               staff_classes[count] = class_data
-               count += 1
+               staff_classes << class_data
             end
          end
       end

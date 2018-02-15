@@ -111,7 +111,7 @@ class SubRequestsController < ApplicationController
    def search_classes
       mb = MindBodyAPI.new
       @staff_classes = mb.get_staff_classes(staff_classes_params)
-      json_response(@staff_classes, :success)
+      json_response(@staff_classes)
    end
 
    def send_to_sendees
