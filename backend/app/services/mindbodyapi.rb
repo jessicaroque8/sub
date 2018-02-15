@@ -47,7 +47,6 @@ class MindBodyAPI
 
       classes.each do |c|
          if c['staff']['id'].to_i == filters[:staff_id_mb].to_i
-            byebug
             if c['start_date_time'].to_date == filters[:start_date_time].to_date
                class_data = {}
                class_data['class_id_mb'] = c['id']
