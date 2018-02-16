@@ -153,6 +153,16 @@ RSpec.describe 'SubRequests API', type: :request do
             expect(json['note']).to eq('Please sub me!')
          end
 
+         it "creates a sendee for each of the group's users" do
+            sendees_before = Sendee.where(sub_request_id: my_sub_request.id).size
+            user_count = my_group.users.size
+            post '/sub_requests', params: valid_attributes
+            sendees_after = Sendee.where(sub_request_id: my_sub_request.id).size
+
+            expect(sendees_before).to eq(0)
+            expect(sendees_after).to eq(user_count)
+         end
+
          it 'returns status code 201' do
             expect(response).to have_http_status(201)
          end
@@ -224,45 +234,6 @@ RSpec.describe 'SubRequests API', type: :request do
          expect(json["0"]['class_name']).to eq("Pilates 101")
          expect(json["0"]['start_date_time']).to eq(expect_sdt)
          expect(json["0"]['end_date_time']).to eq(expect_edt)
-      end
-   end
-
-   describe "POST /sub_requests/:id/send" do
-      before { my_user.groups << Group.find(my_group.id) }
-      it "assigns the current sub_request to @sub_request" do
-         post '/sub_requests/1/send', params: { id: my_sub_request.id }
-         expect(assigns(:sub_request)).to eq(my_sub_request)
-      end
-
-      it "assigns sub_request's group to @group" do
-         post '/sub_requests/1/send', params: { id: my_sub_request.id }
-         expect(assigns(:group)).to eq(my_group)
-      end
-
-      it "creates @sendees as a hash" do
-         post '/sub_requests/1/send', params: { id: my_sub_request.id }
-         expect(assigns(:sendees)).to be_an_instance_of(Hash)
-      end
-
-      it "creates a sendee for each of the group's users" do
-         sendees_before = Sendee.where(sub_request_id: my_sub_request.id).size
-         user_count = my_group.users.size
-         post '/sub_requests/1/send', params: { id: my_sub_request.id }
-         sendees_after = Sendee.where(sub_request_id: my_sub_request.id).size
-
-         expect(sendees_before).to eq(0)
-         expect(sendees_after).to eq(user_count)
-      end
-
-      it "has http status success" do
-         post '/sub_requests/1/send', params: { id: my_sub_request.id }
-         expect(response).to have_http_status(:success)
-      end
-
-      it "returns the sendees in JSON" do
-         post '/sub_requests/1/send', params: { id: my_sub_request.id }
-         expect(json["0"]['user_id']).to eq(my_user.id)
-         expect(json["0"]['sub_request_id']).to eq(my_sub_request.id)
       end
    end
 
