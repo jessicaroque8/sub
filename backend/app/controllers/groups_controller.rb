@@ -6,7 +6,6 @@ class GroupsController < ApplicationController
    before_action :set_group, only: [:show, :update, :destroy]
    def index
       if params[:user_id]
-         byebug
          @groups = Group.joins(:users).where('user_id = ?', params[:user_id])
       else
          byebug

@@ -114,16 +114,6 @@ class SubRequestsController < ApplicationController
       json_response(@staff_classes)
    end
 
-   def send_to_sendees
-      @sub_request = SubRequest.find(params[:sub_request_id])
-      @group = Group.find(@sub_request.group_id)
-      @sendees = {}
-      @group.users.each_with_index do |sendee, index|
-         @sendees[index] = Sendee.create!(user: sendee, sub_request: @sub_request, sub: false)
-      end
-      json_response(@sendees, :sent)
-   end
-
    private
 
    def sub_request_params
