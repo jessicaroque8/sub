@@ -5,7 +5,14 @@ class GroupsController < ApplicationController
 
    before_action :set_group, only: [:show, :update, :destroy]
    def index
-      @groups = Group.all
+      if params[:user_id]
+         byebug
+         @groups = Group.joins(:users).where('user_id = ?', params[:user_id])
+      else
+         byebug
+         @groups = Group.all
+      end
+
       json_response(@groups)
    end
 
@@ -31,7 +38,7 @@ class GroupsController < ApplicationController
    private
 
    def group_params
-      params.permit(:name)
+      params.permit(:name, :user_id)
    end
 
    def set_group
