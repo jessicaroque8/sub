@@ -14,7 +14,9 @@ class SubRequest < ApplicationRecord
   def send_to_sendees
      group = Group.find(self.group_id)
      group.users.each do |user|
-        Sendee.create!(user: user, sub_request: self, sub: false)
+        if (user != self.user)
+           Sendee.create!(user: user, sub_request: self, sub: false)
+        end
      end
   end
 
