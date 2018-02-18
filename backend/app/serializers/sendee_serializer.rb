@@ -1,6 +1,5 @@
 class SendeeSerializer < ActiveModel::Serializer
-  attributes :id, :sub, :created_at, :updated_at, :confirmed,
-   :first_name, :last_name, :image, :reply
+  attributes :id, :sub, :confirmed, :first_name, :last_name, :image, :reply, :user
 
   belongs_to :user
   belongs_to :sub_request
@@ -20,6 +19,10 @@ class SendeeSerializer < ActiveModel::Serializer
 
   def reply
     object.reply
+  end
+
+  def user
+     object.user
   end
 
 end
