@@ -19,7 +19,7 @@ class SubRequest < ApplicationRecord
      group = Group.find(self.group_id)
      group.users.each do |user|
         if (user != self.user)
-           Sendee.create!(user: user, sub_request: self, sub: false)
+           Sendee.create!(user: user, sub_request: self)
         end
      end
   end

@@ -31,12 +31,12 @@ f = SubRequest.create!(user: johnny, group: fitness_assist, class_id_mb: 55552, 
 sub_requests = SubRequest.all
 
 # Open
-a_sendee = Sendee.create!(user: jennifer, sub_request: a, sub: false)
-b_sendee = Sendee.create!(user: johnny, sub_request: b, sub: false, confirmed: false)
+a_sendee = Sendee.create!(user: jennifer, sub_request: a)
+b_sendee = Sendee.create!(user: johnny, sub_request: b)
 
 # Closed
-d_sendee = Sendee.create!(user: johnny, sub_request: e, sub: false, confirmed: false)
-f_sendee = Sendee.create!(user: jennifer, sub_request: f, sub: false, confirmed: false)
+d_sendee = Sendee.create!(user: johnny, sub_request: e)
+f_sendee = Sendee.create!(user: jennifer, sub_request: f)
 
 sendees = Sendee.all
 

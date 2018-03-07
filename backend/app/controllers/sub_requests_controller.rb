@@ -6,23 +6,18 @@ class SubRequestsController < ApplicationController
    include ExceptionHandler
 
    before_action :set_sub_request, only: [:show, :update, :destroy]
+   before_action :authenticate_user!
 
    def index
-      byebug
-      @unresolved_sent = current_user.sub_requests.unresolved
+      if params[:view] == 'unresolved_sent'
+         @requests = SubRequest.where(user: current_user).unresolved
+         serializer = SubRequestUnresolvedSerializer
+      elsif params[:view] == 'unresolved_incoming'
+         @requests = SubRequest.joins(:sendees).where('sendees.user_id = ?', current_user.id).unresolved
+         serializer = SubRequestUnresolvedSerializer
+      end
 
-      @unresolved_incoming = get_incoming(SubRequest.unresolved)
-
-      render json: {
-         :unresolved_sent => @unresolved_sent,
-         :unresolved_incoming => @unresolved_incoming
-      }, each_serializer: SubRequestUnresolvedSerializer
-
-
-      # @unresolved_requests = {
-      #    sent: current_user.sub_requests.unresolved,
-      #    incoming: get_incoming(SubRequest.unresolved)
-      # }
+      json_response(@requests, serializer)
 
       # @closed_requests = {
       #    sent: SubRequest.sent.closed,
@@ -144,7 +139,7 @@ class SubRequestsController < ApplicationController
    private
 
    def sub_request_params
-      params.permit(:user_id, :group_id, :class_id_mb, :start_date_time, :end_date_time, :class_name, :note)
+      params.permit(:view, :user_id, :group_id, :class_id_mb, :start_date_time, :end_date_time, :class_name, :note)
    end
 
    def staff_classes_params
@@ -154,17 +149,5 @@ class SubRequestsController < ApplicationController
    def set_sub_request
       @sub_request = SubRequest.find(params[:id])
    end
-
-   def get_incoming(requests)
-      incoming_requests = []
-      requests.each do |request|
-         if request.user_id != current_user.id
-            incoming_requests << request
-         end
-      end
-      incoming_requests
-   end
-
-
 
 end
