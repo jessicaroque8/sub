@@ -16,7 +16,6 @@ class SendeesController < ApplicationController
   end
 
   def show
-     byebug
      json_response(@sendee, SendeeSerializer)
   end
 

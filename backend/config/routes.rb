@@ -4,8 +4,9 @@ Rails.application.routes.draw do
    resources :groups
    resources :users
    resources :sub_requests do
-      resources :sendees, only: [:index, :show, :create, :update, :destroy] do
-         resources :reply, only: [:index, :create, :update, :destroy]
+      resources :selected_sub
+      resources :sendees do
+         resources :reply
       end
    end
    post '/search_classes' => 'sub_requests#search_classes', as: :search_classes

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180307182541) do
+ActiveRecord::Schema.define(version: 20180307200632) do
 
   create_table "groups", force: :cascade do |t|
     t.string "name"
@@ -34,6 +34,16 @@ ActiveRecord::Schema.define(version: 20180307182541) do
     t.datetime "updated_at", null: false
     t.index ["sendee_id"], name: "index_replies_on_sendee_id"
     t.index ["sub_request_id"], name: "index_replies_on_sub_request_id"
+  end
+
+  create_table "selected_subs", force: :cascade do |t|
+    t.boolean "confirmed", default: false
+    t.integer "sub_request_id"
+    t.integer "sendee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sendee_id"], name: "index_selected_subs_on_sendee_id"
+    t.index ["sub_request_id"], name: "index_selected_subs_on_sub_request_id"
   end
 
   create_table "sendees", force: :cascade do |t|

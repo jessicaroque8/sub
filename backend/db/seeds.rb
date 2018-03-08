@@ -18,9 +18,9 @@ users.each do |user|
 end
 
 # Open
-a = SubRequest.create!(user: johnny, group: yoga, class_id_mb: 5555, start_date_time: DateTime.new(2018, 03, 01, 8, 00, 00), end_date_time: DateTime.new(2018, 03, 01, 9, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
-b = SubRequest.create!(user: jennifer, group: fitness, class_id_mb: 00000, start_date_time: DateTime.new(2018, 02, 9, 10, 00, 00), end_date_time: DateTime.new(2018, 02, 9, 11, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
-c = SubRequest.create!(user: jennifer, group: yoga, class_id_mb: 77777, start_date_time: DateTime.new(2018, 02, 10, 11, 00, 00), end_date_time: DateTime.new(2018, 02, 10, 12, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+a = SubRequest.create!(user: johnny, group: yoga, class_id_mb: 5555, start_date_time: DateTime.new(2018, 04, 01, 8, 00, 00), end_date_time: DateTime.new(2018, 04, 01, 9, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+b = SubRequest.create!(user: jennifer, group: fitness, class_id_mb: 00000, start_date_time: DateTime.new(2018, 04, 9, 10, 00, 00), end_date_time: DateTime.new(2018, 04, 9, 11, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
+c = SubRequest.create!(user: jennifer, group: yoga, class_id_mb: 77777, start_date_time: DateTime.new(2018, 04, 10, 11, 00, 00), end_date_time: DateTime.new(2018, 04, 10, 12, 00, 00), class_name: RandomData.word, note: RandomData.sentence)
 
 # Closed
 d = SubRequest.create!(user: jennifer, group: fitness, class_id_mb: 11111, start_date_time: DateTime.new(2018, 05, 10, 8, 00, 00), end_date_time: DateTime.new(2018, 05, 10, 9, 00, 00), class_name: RandomData.word, note: RandomData.sentence)

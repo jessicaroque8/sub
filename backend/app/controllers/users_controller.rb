@@ -20,11 +20,11 @@ class UsersController < ApplicationController
          email: params[:email],
          password: params[:password],
       )
-      json_response(@user, UsersSerializer, :created)
+      json_response(@user, UserSerializer, :created)
    end
 
    def show
-      json_response(@user, UsersSerializer)
+      json_response(@user, UserSerializer)
    end
 
    def update

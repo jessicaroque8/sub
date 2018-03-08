@@ -1,9 +1,10 @@
 class SendeeSerializer < ActiveModel::Serializer
-  attributes :id, :first_name, :last_name, :image, :reply, :user
+  attributes :id, :first_name, :last_name, :image, :reply, :user, :selected_sub
 
   belongs_to :user
   belongs_to :sub_request
   has_one :reply
+  has_one :selected_sub
 
   def user
      object.user

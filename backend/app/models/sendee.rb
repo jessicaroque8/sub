@@ -2,6 +2,7 @@ class Sendee < ApplicationRecord
   belongs_to :sub_request
   belongs_to :user
   has_one :reply
+  has_one :selected_sub
 
   after_create :create_reply
 

@@ -3,6 +3,7 @@ class SubRequest < ApplicationRecord
   belongs_to :user
   has_many :sendees
   has_many :replies, through: :sendees
+  has_one :selected_sub
 
   after_create :send_to_sendees
 

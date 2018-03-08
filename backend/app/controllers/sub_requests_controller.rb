@@ -111,11 +111,11 @@ class SubRequestsController < ApplicationController
 
    def create
       @sub_request = SubRequest.create!(sub_request_params)
-      json_response(@sub_request, :created)
+      json_response(@sub_request, SubRequestSerializer, :created)
    end
 
    def show
-      render json: @sub_request
+      json_response(@sub_request, SubRequestSerializer)
    end
 
    def update
@@ -133,7 +133,7 @@ class SubRequestsController < ApplicationController
    def search_classes
       mb = MindBodyAPI.new
       @staff_classes = mb.get_staff_classes(staff_classes_params)
-      json_response(@staff_classes)
+      json_response(@staff_classes, nil)
    end
 
    private

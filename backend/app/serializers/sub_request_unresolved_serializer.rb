@@ -6,6 +6,7 @@ class SubRequestUnresolvedSerializer < SubRequestSerializer
    belongs_to :group
    belongs_to :user
    has_many :sendees
+   has_one :selected_sub
 
    def reply_counts
       counts = {
