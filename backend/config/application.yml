@@ -10,6 +10,6 @@
 #   stripe_api_key: sk_live_EeHnL644i6zo4Iyq4v1KdV9H
 #   stripe_publishable_key: pk_live_9lcthxpSIHbGwmdO941O1XVU
 
-MINDBODY_SOURCE_NAME: Blocstudent
-MINDBODY_SOURCE_KEY: gS2EOansqkwV/jHxPbBtCuf0iH0=
-MINDBODY_SITE_IDS: '-99'
+mindbody_source_name: Blocstudent
+mindbody_source_key: YoibIwH/WerJTBaq/9S+tihDvek=
+mindbody_siteid: -99

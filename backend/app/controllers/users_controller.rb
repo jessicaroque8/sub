@@ -43,7 +43,6 @@ class UsersController < ApplicationController
       @output_data = mb.get_single_staff(
          @mbData['email'],
          @mbData['password'],
-         @mbData['siteids'],
          @mbData['first_name'],
          @mbData['last_name'],
       )
@@ -67,7 +66,7 @@ class UsersController < ApplicationController
    end
 
    def link_to_mb_params
-      params.require(:mbData).permit(:email, :password, :siteids, :first_name, :last_name)
+      params.require(:mbData).permit(:email, :password, :first_name, :last_name)
    end
 
 end

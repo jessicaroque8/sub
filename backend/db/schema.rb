@@ -12,24 +12,27 @@
 
 ActiveRecord::Schema.define(version: 20180307200632) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "groups", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "groups_users", id: false, force: :cascade do |t|
-    t.integer "group_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "group_id", null: false
+    t.bigint "user_id", null: false
     t.index ["group_id", "user_id"], name: "index_groups_users_on_group_id_and_user_id", unique: true
     t.index ["user_id", "group_id"], name: "index_groups_users_on_user_id_and_group_id", unique: true
   end
 
   create_table "replies", force: :cascade do |t|
-    t.integer "value", default: 0
+    t.integer "value", default: 0, null: false
     t.text "note"
-    t.integer "sendee_id"
-    t.integer "sub_request_id"
+    t.bigint "sendee_id"
+    t.bigint "sub_request_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sendee_id"], name: "index_replies_on_sendee_id"
@@ -38,8 +41,8 @@ ActiveRecord::Schema.define(version: 20180307200632) do
 
   create_table "selected_subs", force: :cascade do |t|
     t.boolean "confirmed", default: false
-    t.integer "sub_request_id"
-    t.integer "sendee_id"
+    t.bigint "sub_request_id"
+    t.bigint "sendee_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sendee_id"], name: "index_selected_subs_on_sendee_id"
@@ -47,8 +50,8 @@ ActiveRecord::Schema.define(version: 20180307200632) do
   end
 
   create_table "sendees", force: :cascade do |t|
-    t.integer "sub_request_id"
-    t.integer "user_id"
+    t.bigint "sub_request_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sub_request_id"], name: "index_sendees_on_sub_request_id"
@@ -56,13 +59,13 @@ ActiveRecord::Schema.define(version: 20180307200632) do
   end
 
   create_table "sub_requests", force: :cascade do |t|
-    t.datetime "start_date_time"
+    t.datetime "start_date_time", null: false
     t.datetime "end_date_time"
     t.string "class_name"
     t.integer "class_id_mb"
     t.text "note"
-    t.integer "group_id"
-    t.integer "user_id"
+    t.bigint "group_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "closed", default: false
@@ -71,6 +74,13 @@ ActiveRecord::Schema.define(version: 20180307200632) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.integer "staff_id_mb"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "image"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -82,22 +92,18 @@ ActiveRecord::Schema.define(version: 20180307200632) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "image"
-    t.string "email"
-    t.integer "staff_id_mb"
     t.text "tokens"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "replies", "sendees"
+  add_foreign_key "replies", "sub_requests"
+  add_foreign_key "selected_subs", "sendees"
+  add_foreign_key "selected_subs", "sub_requests"
+  add_foreign_key "sendees", "sub_requests"
+  add_foreign_key "sendees", "users"
+  add_foreign_key "sub_requests", "groups"
+  add_foreign_key "sub_requests", "users"
 end

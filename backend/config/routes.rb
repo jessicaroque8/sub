@@ -11,5 +11,6 @@ Rails.application.routes.draw do
    end
    post '/search_classes' => 'sub_requests#search_classes', as: :search_classes
    post '/link_to_mb' => 'users#link_to_mb', as: :link_to_mb
+   post '/sub_class_teacher' => 'sub_requests#sub_class_teacher', as: :sub_class_teacher
 
 end

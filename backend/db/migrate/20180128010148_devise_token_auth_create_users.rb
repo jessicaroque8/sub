@@ -1,7 +1,6 @@
 class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[5.1]
-  def change
-    drop_table :users
-    create_table(:users) do |t|
+   def change
+    change_table :users do |t|
       ## Required
       t.string :provider, :null => false, :default => "email"
       t.string :uid, :null => false, :default => ""
@@ -34,23 +33,13 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[5.1]
       # t.string   :unlock_token # Only if unlock strategy is :email or :both
       # t.datetime :locked_at
 
-      ## User Info
-      t.string :first_name
-      t.string :last_name
-      t.string :image
-      t.string :email
-      t.integer :staff_id_mb
-
       ## Tokens
       t.text :tokens
-
-      t.timestamps
     end
 
-    add_index :users, :email,                unique: true
     add_index :users, [:uid, :provider],     unique: true
     add_index :users, :reset_password_token, unique: true
-    add_index :users, :confirmation_token,   unique: true
+    # add_index :users, :confirmation_token,   unique: true
     # add_index :users, :unlock_token,       unique: true
   end
 end

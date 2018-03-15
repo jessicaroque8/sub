@@ -2,15 +2,27 @@ require 'savon'
 
 class MindBodyAPI
 
-   def get_all_staff(source_key, password, siteids)
+   def get_all_staff(username, password)
       # Returns a Hash of MindBody::Models::Staff.
-      response = MindBody::Services::StaffService.get_staff('Username' => source_key, 'Password' => password, 'SiteIDs' => {'ids' => [siteids]})
+      response = MindBody::Services::StaffService.get_staff(
+         'SourceCredentials'=> {
+            "SourceName"=> ENV['mindbody_source_name'],
+            "Password"=> ENV['mindbody_source_key'],
+            'SiteIDs' => {
+               'int' => [ENV['mindbody_siteid'].to_i]
+            }
+         },
+         'Username' => username,
+         'Password' => password,
+         'SiteIDs' => {
+            'int' => [ENV['mindbody_siteid'].to_i]
+            })
       # Isolate the array containing each staff member's data.
-      all_staff = response.result.first[1]
+      all_staff = response.result.first
    end
 
-   def get_single_staff(username, password, siteids, first_name, last_name)
-      all_staff = get_all_staff(username, password, siteids)
+   def get_single_staff(username, password, first_name, last_name)
+      all_staff = get_all_staff(username, password)
       single_staff = {}
       all_staff.each do |staff|
          if staff['first_name'] == first_name && staff['last_name'] == last_name
@@ -35,6 +47,13 @@ class MindBodyAPI
          # }
    def get_staff_classes(filters)
       response = MindBody::Services::ClassService.get_classes(
+         'SourceCredentials'=> {
+            "SourceName"=> ENV['mindbody_source_name'],
+            "Password"=> ENV['mindbody_source_key'],
+            'SiteIDs' => {
+               'int' => [ENV['mindbody_siteid'].to_i]
+            }
+         },
          'StaffIDs' =>
             {'ids' => filters[:staff_id_mb].to_i},
          'StartDateTime' =>
@@ -64,7 +83,16 @@ class MindBodyAPI
    end
 
    def get_classes_by_id(class_ids)
-      response = MindBody::Services::ClassService.get_classes('ClassIDs' => {'ids' => [class_ids] } )
+      response = MindBody::Services::ClassService.get_classes(
+         'SourceCredentials'=> {
+            "SourceName"=> ENV['mindbody_source_name'],
+            "Password"=> ENV['mindbody_source_key'],
+            'SiteIDs' => {
+               'int' => [ENV['mindbody_siteid'].to_i]
+            }
+         },
+         'ClassIDs' => {'ids' => [class_ids] }
+      );
       classes = response.result.first[1]
 
       requested_classes = {}
@@ -91,17 +119,17 @@ class MindBodyAPI
       response = client.call(:substitute_class_teacher, message: {
             "Request" => {
                "SourceCredentials" =>
-                  { "SourceName" => "Blocstudent",
-                     "Password" => "gS2EOansqkwV/jHxPbBtCuf0iH0=",
+                  { "SourceName" => ENV['mindbody_source_name'],
+                     "Password" => ENV['mindbody_source_key'],
                      "SiteIDs" => {
-                        "int" => "-99"
+                        "int" => ENV['mindbody_siteid']
                      }
                   },
                "UserCredentials" =>
-                  { "Username" => "Siteowner",
-                     "Password" => "apitest1234",
+                  { "Username" => current_user.email,
+                     "Password" => current_user.encrypted_password,
                      "SiteIDs" => {
-                        "int" => "-99"
+                        "int" => ENV['mindbody_siteid']
                      },
                      "LocationID" => "1"
                   },
@@ -127,12 +155,7 @@ class MindBodyAPI
 
 # Return the updated class info or print error.
       updated_class = get_classes_by_id(class_id)
-
-      if updated_class == {}
-         puts 'No classes were found for that Class ID.'
-      end
-
-      updated_class
+         raise 'Unable to substitute class teacher. Check the class ID and selected sub\'s staff id and try again.' if updated_class == {}
    end
 
    private

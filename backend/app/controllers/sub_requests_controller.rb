@@ -136,6 +136,12 @@ class SubRequestsController < ApplicationController
       json_response(@staff_classes, nil)
    end
 
+   def sub_class_teacher
+      mb = MindBodyAPI.new
+      @updated_class = mb.sub_class_teacher(sub_class_teacher_params)
+      json_response(@updated_class, nil)
+   end
+
    private
 
    def sub_request_params
@@ -144,6 +150,10 @@ class SubRequestsController < ApplicationController
 
    def staff_classes_params
       params.require(:filters).permit(:staff_id_mb, :start_date_time, :end_date_time)
+   end
+
+   def sub_class_teacher_params
+      params.permit(:class_id, :sub_staff_id)
    end
 
    def set_sub_request
