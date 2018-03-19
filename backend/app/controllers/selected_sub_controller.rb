@@ -33,7 +33,6 @@ class SelectedSubController < ApplicationController
   # PATCH/PUT /selected_subs/1
   def update
     if @selected_sub.update(selected_sub_params)
-      byebug
       if selected_sub_params[:confirmed] == true
          @updated_class = sub_class_teacher
       end
