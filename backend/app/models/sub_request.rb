@@ -13,7 +13,7 @@ class SubRequest < ApplicationRecord
   validates_presence_of :class_id_mb
 
   scope :unresolved, -> { where('closed = ? AND start_date_time >= ?', false, Time.now.to_date) }
-  scope :closed, -> { where('closed = ? AND start_date_time >= ?', true, Time.now.to_date) }
+  scope :resolved, -> { where('closed = ? AND start_date_time >= ?', true, Time.now.to_date) }
   scope :past, -> { where('start_date_time < ?', Time.now.to_date)}
 
   def send_to_sendees

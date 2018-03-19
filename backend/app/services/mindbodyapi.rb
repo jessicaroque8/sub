@@ -114,7 +114,8 @@ class MindBodyAPI
       requested_classes
    end
 
-   def sub_class_teacher(class_id, sub_staff_id)
+   def sub_class_teacher(current_user, subbed_class)
+      byebug
       client = Savon.client(wsdl: "https://api.mindbodyonline.com/0_5_1/ClassService.asmx?wsdl")
       response = client.call(:substitute_class_teacher, message: {
             "Request" => {
@@ -126,15 +127,15 @@ class MindBodyAPI
                      }
                   },
                "UserCredentials" =>
-                  { "Username" => current_user.email,
-                     "Password" => current_user.encrypted_password,
+                  { "Username" => 'Siteowner',
+                     "Password" => 'apitest1234',
                      "SiteIDs" => {
                         "int" => ENV['mindbody_siteid']
                      },
                      "LocationID" => "1"
                   },
-               "ClassID" => class_id,
-               "StaffID" => sub_staff_id,
+               "ClassID" => subbed_class[:class_id],
+               "StaffID" => subbed_class[:sub_staff_id],
                "OverrideConflicts" => "false",
                "SendClientEmail" => "false",
                "SendOldStaffEmail" => "false",
@@ -153,8 +154,10 @@ class MindBodyAPI
       #       puts "There was an error when trying to substitute the class teacher."
       # end
 
+      # Possible exceptions: invalid username/password. schedule conflict.
+
 # Return the updated class info or print error.
-      updated_class = get_classes_by_id(class_id)
+      updated_class = get_classes_by_id(subData[:class_id])
          raise 'Unable to substitute class teacher. Check the class ID and selected sub\'s staff id and try again.' if updated_class == {}
    end
 

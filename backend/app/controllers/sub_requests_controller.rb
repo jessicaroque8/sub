@@ -15,98 +15,15 @@ class SubRequestsController < ApplicationController
       elsif params[:view] == 'unresolved_incoming'
          @requests = SubRequest.joins(:sendees).where('sendees.user_id = ?', current_user.id).unresolved
          serializer = SubRequestUnresolvedSerializer
+      elsif params[:view] == 'resolved_sent'
+         @requests = SubRequest.where(user: current_user).resolved
+         serializer = SubRequestSerializer
+      elsif params[:view] == 'resolved_incoming'
+         @requests = SubRequest.joins(:sendees).where('sendees.user_id = ?', current_user.id).resolved
+         serializer = SubRequestSerializer
       end
 
       json_response(@requests, serializer)
-
-      # @closed_requests = {
-      #    sent: SubRequest.sent.closed,
-      #    incoming: SubRequest.incoming.closed
-      # }
-      #
-      # @past_requests = {
-      #    sent: SubRequest.sent.past,
-      #    incoming: SubRequest.incoming.past
-      # }
-      # render json: @unresolved_requests, each_serializer: SubRequestUnresolvedSerializer
-
-      # if params[:scope] == "incomplete"
-      #    user_requests = SubRequest.where('user_id = ? AND start_date_time >= ?', params[:user_id].to_i, Time.now.to_date)
-      #    @sent_sub_requests = []
-      #       user_requests.each do |request|
-      #          complete = false
-      #          request.sendees.each do |sendee|
-      #             if sendee.confirmed == true
-      #                complete = true
-      #             end
-      #          end
-      #
-      #          if complete == false
-      #             @sent_sub_requests << request
-      #          end
-      #       end
-      #
-      #    other_requests = SubRequest.where('start_date_time >= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', params[:user_id])
-      #    @incoming_sub_requests = []
-      #    other_requests.each do |request|
-      #       complete = false
-      #       request.sendees.each do |sendee|
-      #          if sendee.confirmed == true
-      #             complete = true
-      #          end
-      #       end
-      #
-      #       if complete == false
-      #          @incoming_sub_requests << request
-      #       end
-      #    end
-      #
-      #    json_response({ :sent => @sent_sub_requests, :incoming => @incoming_sub_requests})
-      # elsif params[:scope] == "complete"
-      #    user_requests = SubRequest.where('user_id = ? AND start_date_time >= ?', params[:user_id].to_i, Time.now.to_date)
-      #    @sent_sub_requests = []
-      #
-      #       user_requests.each do |request|
-      #          complete = false
-      #          request.sendees.each do |sendee|
-      #             if sendee.confirmed == true
-      #                complete = true
-      #             end
-      #          end
-      #
-      #          if complete == true
-      #             @sent_sub_requests << request
-      #          end
-      #       end
-      #
-      #    other_requests = SubRequest.where('start_date_time >= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', params[:user_id].to_i)
-      #    @incoming_sub_requests = []
-      #
-      #    other_requests.each do |request|
-      #       complete = false
-      #       request.sendees.each do |sendee|
-      #          if sendee.confirmed == true
-      #             complete = true
-      #          end
-      #       end
-      #
-      #       if complete == true
-      #          @incoming_sub_requests << request
-      #       end
-      #    end
-      #
-      #    json_response({ :sent => @sent_sub_requests, :incoming => @incoming_sub_requests})
-      # elsif params[:scope] == "past"
-      #    sent_requests = SubRequest.where('user_id = ? AND start_date_time <= ?', params[:user_id].to_i, Time.now.to_date)
-      #    @sent_sub_requests = []
-      #    sent_requests.each { |s| @sent_sub_requests << s }
-      #
-      #    incoming_requests = SubRequest.where('start_date_time <= ?', Time.now.to_date).joins(:sendees).where('sendees.user_id = ?', params[:user_id].to_i)
-      #    @incoming_sub_requests = []
-      #    incoming_requests.each { |s| @incoming_sub_requests << s }
-      #
-      #    json_response({ :sent => @sent_sub_requests, :incoming => @incoming_sub_requests})
-      # end
    end
 
    def create
@@ -136,12 +53,6 @@ class SubRequestsController < ApplicationController
       json_response(@staff_classes, nil)
    end
 
-   def sub_class_teacher
-      mb = MindBodyAPI.new
-      @updated_class = mb.sub_class_teacher(sub_class_teacher_params)
-      json_response(@updated_class, nil)
-   end
-
    private
 
    def sub_request_params
@@ -150,10 +61,6 @@ class SubRequestsController < ApplicationController
 
    def staff_classes_params
       params.require(:filters).permit(:staff_id_mb, :start_date_time, :end_date_time)
-   end
-
-   def sub_class_teacher_params
-      params.permit(:class_id, :sub_staff_id)
    end
 
    def set_sub_request

@@ -1,5 +1,5 @@
 class SelectedSubSerializer < ActiveModel::Serializer
-  attributes :id, :confirmed, :first_name, :last_name, :staff_id_mb, :updated_at, :created_at
+  attributes :id, :confirmed, :first_name, :last_name, :staff_id_mb, :updated_at, :created_at, :image
 
   belongs_to :sub_request
   belongs_to :sendee
@@ -15,4 +15,8 @@ class SelectedSubSerializer < ActiveModel::Serializer
   def staff_id_mb
      object.sendee.user.staff_id_mb
   end
+
+  def image
+     object.sendee.user.image
+  end 
 end

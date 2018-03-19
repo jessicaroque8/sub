@@ -1,8 +1,10 @@
+require 'MindBodyAPI'
+
 class SelectedSubController < ApplicationController
 
    include Response
    include ExceptionHandler
-   
+
   before_action :set_selected_sub, only: [:show, :update, :destroy]
 
   # GET /selected_subs
@@ -31,7 +33,11 @@ class SelectedSubController < ApplicationController
   # PATCH/PUT /selected_subs/1
   def update
     if @selected_sub.update(selected_sub_params)
-      json_response(@selected_sub, SelectedSubSerializer)
+      byebug
+      if selected_sub_params[:confirmed] == true
+         @updated_class = sub_class_teacher
+      end
+      json_response(@updated_class)
     end
   end
 
@@ -47,5 +53,14 @@ class SelectedSubController < ApplicationController
 
     def selected_sub_params
       params.require(:selected_sub).permit(:id, :confirmed, :sub_request_id, :sendee_id)
+    end
+
+    def sub_class_teacher
+      mb = MindBodyAPI.new
+      updated_class = mb.sub_class_teacher(current_user, sub_class_teacher_params)
+    end
+
+    def sub_class_teacher_params
+      params.require(:subbed_class).permit(:class_id, :sub_staff_id)
     end
 end
