@@ -8,7 +8,6 @@ class GroupsController < ApplicationController
       if params[:user_id]
          @groups = Group.joins(:users).where('user_id = ?', params[:user_id])
       else
-         byebug
          @groups = Group.all
       end
 
