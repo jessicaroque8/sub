@@ -21,6 +21,3 @@
 
 # Ignore application configuration
 backend/config/application.yml
-
-# Ignore frontend node_modules to make Github cleaner
-/frontend/node_modules
