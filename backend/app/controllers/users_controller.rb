@@ -44,11 +44,11 @@ class UsersController < ApplicationController
          @mbData['email'],
          @mbData['password'],
          @mbData['first_name'],
-         @mbData['last_name'],
+         @mbData['last_name']
       )
 
 # Returns staff_id_mb, first_name, last_name, image
-      json_response(@output_data)
+      json_response(@output_data, nil)
    end
 
    private

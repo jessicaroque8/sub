@@ -3,9 +3,9 @@ A Rails API backend for a mobile app to manage class instructor substitute reque
 
 To launch:
 1. Install dependencies as needed:
-   * Ruby (https://www.ruby-lang.org/en/downloads/)
-   * Rails
-      `$ gem install rails`
+   * Ruby 2.4.1 (https://www.ruby-lang.org/en/downloads/)
+   * Rails 5.1.5
+      `$ gem install rails -v 5.1.5`
    * MINDBODY Developer Account (https://developers.mindbodyonline.com/Home/SignUp)
 2. Install the project gems.
    `$ bundle install`
