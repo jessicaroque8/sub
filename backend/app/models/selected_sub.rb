@@ -3,7 +3,7 @@ class SelectedSub < ApplicationRecord
    belongs_to :sendee
 
    before_create :set_default
-   after_save :check_confirmed
+   before_save :check_confirmed
 
    private
 
@@ -16,6 +16,6 @@ class SelectedSub < ApplicationRecord
          self.sub_request.closed = true
          self.sub_request.save!
       end
-   end 
+   end
 
 end
