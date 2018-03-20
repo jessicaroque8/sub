@@ -9,7 +9,8 @@ require 'random_data'
 #      $ mb = MindBodyAPI.new
 #      $ mb.get_single_staff('any_username', 'any_password', staff1_first_name, staff1_last_name)
 #      $ mb.get_single_staff('any_username', 'any_password', staff2_first_name, staff2_last_name)
-# 3. Modify the user seeds below to create an account for each staff member using the outputted IDs as staff_id_mb.
+# 3. Modify the user seeds below to create an account for each staff member using the outputted data as the user attributes,
+#    (staff_id_mb: id, first_name: first_name, last_name: last_name, image: image) and any values for email and password.
 
 jennifer = User.create!(staff_id_mb: 100000164, first_name: 'Jennifer', last_name: 'Anderson', email: 'jennifer@email.com', password: 'saraswati8', image: 'https://image.ibb.co/cMrBeR/image_2.png')
 johnny = User.create!(staff_id_mb: 100000270, first_name: 'Johnny', last_name: 'Salke', email: 'johnny@email.com', password: 'prajaprati', image: 'https://thumb.ibb.co/nGmcKR/image_3.png')

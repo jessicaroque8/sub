@@ -1,9 +1,9 @@
 class SubRequest < ApplicationRecord
   belongs_to :group
   belongs_to :user
-  has_many :sendees
+  has_many :sendees, dependent: :destroy
   has_many :replies, through: :sendees
-  has_one :selected_sub
+  has_one :selected_sub, dependent: :destroy
 
   after_create :send_to_sendees
 

@@ -32,7 +32,6 @@ class MindBodyAPI
             single_staff['image'] = staff['image_url']
          end
       end
-      byebug
       single_staff
    end
 
@@ -116,7 +115,6 @@ class MindBodyAPI
    end
 
    def sub_class_teacher(current_user, subbed_class)
-      byebug
       client = Savon.client(wsdl: "https://api.mindbodyonline.com/0_5_1/ClassService.asmx?wsdl")
       response = client.call(:substitute_class_teacher, message: {
             "Request" => {
