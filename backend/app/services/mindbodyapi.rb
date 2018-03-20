@@ -156,7 +156,7 @@ class MindBodyAPI
       # Possible exceptions: invalid username/password. schedule conflict.
 
 # Return the updated class info or print error.
-      updated_class = get_classes_by_id(subData[:class_id])
+      updated_class = get_classes_by_id(subbed_class[:class_id])
          raise 'Unable to substitute class teacher. Check the class ID and selected sub\'s staff id and try again.' if updated_class == {}
    end
 
