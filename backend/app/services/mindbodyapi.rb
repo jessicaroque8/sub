@@ -83,6 +83,7 @@ class MindBodyAPI
    end
 
    def get_classes_by_id(class_ids)
+      byebug
       response = MindBody::Services::ClassService.get_classes(
          'SourceCredentials'=> {
             "SourceName"=> ENV['mindbody_source_name'],

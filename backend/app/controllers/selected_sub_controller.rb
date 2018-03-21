@@ -35,8 +35,10 @@ class SelectedSubController < ApplicationController
     if @selected_sub.update(selected_sub_params)
       if selected_sub_params[:confirmed] == true
          @updated_class = sub_class_teacher
+         if @updated_class
+            json_response(@updated_class)
+         end
       end
-      json_response(@updated_class)
     end
   end
 
